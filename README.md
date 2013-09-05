@@ -1,16 +1,26 @@
-Gumbo Bindings for C#
+Gumbo - A pure-C HTML5 parser - C# bindings
 =============
 
-Google [Gumbo HTML5 parsing library](https://github.com/google/gumbo-parser) bindings.
+[Gumbo parser](https://github.com/google/gumbo-parser) bindings using P/Invokes and marshalling.
+Types member names are preserved the way they appear in original code to make change tracking easier.
+To make things easy to use there are wrappers for the main classes.
 
-Basics
+Basic wrapper classes usage
 =============
 
-            string testHtml = "<html><body class=\"gumbo\">Boo!</body></html>";
-            using (GumboWrapper gumbo = new GumboWrapper(testHtml))
-            {
-                Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().Text);
-                Console.WriteLine(gumbo.ToXDocument()); // to XDocument
-            }
-            Console.ReadLine();
+    string testHtml = "<html><body class=\"gumbo\">Boo!</body></html>";
+    using (GumboWrapper gumbo = new GumboWrapper(testHtml))
+    {
+        Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().Text); // Boo!
+        Console.WriteLine(gumbo.ToXDocument()); // to XDocument
+    }
+    Console.ReadLine();
+
+It produces the following output:
+
+    Boo!
+    <html>
+      <head />
+      <body class="gumbo">Boo!</body>
+    </html>
 
