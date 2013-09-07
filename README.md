@@ -2,7 +2,7 @@ Gumbo - A pure-C HTML5 parser - C# bindings
 =============
 
 [Gumbo parser](https://github.com/google/gumbo-parser) bindings using P/Invokes and marshalling.
-Types member names are preserved the way they appear in the original code to make change tracking easier.
+Types member names are preserved the way they appear in the original code to make API change tracking easier.
 To simplify usage there are wrappers for the main classes.
 
 Basic wrapper classes usage
