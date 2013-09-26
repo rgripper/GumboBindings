@@ -28,9 +28,9 @@ namespace Gumbo.Wrappers
             var root = node.document.GetChildren().First();
             Root = new ElementWrapper((GumboElementNode)root, this);
             HasDocType = node.document.has_doctype;
-            Name = node.document.name;
-            PublicIdentifier = node.document.public_identifier;
-            SystemIdentifier = node.document.system_identifier;
+            Name = NativeUtf8Helper.StringFromNativeUtf8(node.document.name);
+            PublicIdentifier = NativeUtf8Helper.StringFromNativeUtf8(node.document.public_identifier);
+            SystemIdentifier = NativeUtf8Helper.StringFromNativeUtf8(node.document.system_identifier);
             DocTypeQuirksMode = node.document.doc_type_quirks_mode;
         }
     }

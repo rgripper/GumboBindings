@@ -17,7 +17,7 @@ namespace Gumbo.Wrappers
 
         private readonly IntPtr _OutputPtr;
 
-        private readonly string _Html;
+        private readonly IntPtr _Html;
 
         public DocumentWrapper Document { get; private set; }
 
@@ -25,12 +25,10 @@ namespace Gumbo.Wrappers
 
         public GumboWrapper(string html, bool stopOnFirstError = false, int maxErrors = -1)
         {
-            _Html = html;
-
             _Options = GumboExtensions.MarshalProcAddress<GumboOptions>("kGumboDefaultOptions");
             _Options.max_errors = maxErrors;
             _Options.stop_on_first_error = stopOnFirstError;
-
+            _Html = NativeUtf8Helper.NativeUtf8FromString(html);
             _OutputPtr = NativeMethods.gumbo_parse(_Html);
             var output = (GumboOutput)Marshal.PtrToStructure(_OutputPtr, typeof(GumboOutput));
             _GumboDocumentNode = output.GetDocument();
@@ -45,6 +43,7 @@ namespace Gumbo.Wrappers
 
         public void Dispose()
         {
+            Marshal.FreeHGlobal(_Html);
             NativeMethods.gumbo_destroy_output(ref _Options, _OutputPtr);
         }
     }

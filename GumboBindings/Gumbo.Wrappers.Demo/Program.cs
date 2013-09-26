@@ -16,7 +16,7 @@ namespace Gumbo.Wrappers.Demo
         {
             //WebClient client = new WebClient();
             //string testHtml = client.DownloadString("http://google.ru/");
-            string testHtml = "<html><body class=\"gumbo\">Boo!</body></html>";
+            string testHtml = "<html><body class=\"gumbo\">привет!</body></html>";
             using (GumboWrapper gumbo = new GumboWrapper(testHtml))
             {
                 Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().Text);

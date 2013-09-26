@@ -47,6 +47,7 @@
     <Compile Include="GumboWrapper.cs" />
     <Compile Include="NodeWrapper.cs" />
     <Compile Include="TextWrapper.cs" />
+    <Compile Include="NativeUtf8Helper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gumbo.Bindings\Gumbo.Bindings.csproj">

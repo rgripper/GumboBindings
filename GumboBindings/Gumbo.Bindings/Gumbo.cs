@@ -80,8 +80,7 @@ namespace Gumbo.Bindings
     public struct GumboDuplicateAttrError 
     {
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string name;
+        public IntPtr name;
     
         /// unsigned int
         public uint original_index;
@@ -461,8 +460,7 @@ namespace Gumbo.Bindings
         public GumboAttributeNamespaceEnum attr_namespace;
 
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string name;
+        public IntPtr name;
 
         /**
          * The original text of the attribute name, as a pointer into the original
@@ -471,8 +469,7 @@ namespace Gumbo.Bindings
         GumboStringPiece original_name;
 
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string value;
+        public IntPtr value;
 
         /// GumboSourcePosition->Anonymous_b1ac5e09_64df_4170_b0b1_3753090b5fc0
         public GumboSourcePosition name_start;
@@ -498,16 +495,13 @@ namespace Gumbo.Bindings
         public bool has_doctype;
 
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string name;
+        public IntPtr name;
 
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string public_identifier;
+        public IntPtr public_identifier;
 
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string system_identifier;
+        public IntPtr system_identifier;
 
         /// GumboQuirksModeEnum->Anonymous_9634e771_9059_484b_92b0_2f47f39beb2a
         public GumboQuirksModeEnum doc_type_quirks_mode;
@@ -554,8 +548,7 @@ namespace Gumbo.Bindings
     public struct GumboText
     {
         /// char*
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string text;
+        public IntPtr text;
 
         /**
          * The original text of this node, as a pointer into the original buffer.  For
@@ -614,14 +607,14 @@ namespace Gumbo.Bindings
         /// Return Type: GumboOutput*
         ///buffer: char*
         [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_parse", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr gumbo_parse([In] [MarshalAsAttribute(UnmanagedType.LPStr)]string buffer);
+        public static extern IntPtr gumbo_parse(IntPtr buffer);
 
         /// Return Type: GumboOutput*
         ///options: GumboOptions*
         ///buffer: char*
         ///buffer_length: size_t->unsigned int
         [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_parse_with_options", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, [In] [MarshalAsAttribute(UnmanagedType.LPStr)] string buffer, [MarshalAsAttribute(UnmanagedType.SysUInt)] uint buffer_length);
+        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, IntPtr buffer, [MarshalAsAttribute(UnmanagedType.SysUInt)] uint buffer_length);
 
         /// Return Type: void
         ///options: GumboOptions*
@@ -634,7 +627,7 @@ namespace Gumbo.Bindings
 
 
         [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_parse_with_options", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, [In] [MarshalAsAttribute(UnmanagedType.LPStr)] string buffer, IntPtr buffer_length);
+        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, IntPtr buffer, IntPtr buffer_length);
 
     }
 }

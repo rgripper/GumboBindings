@@ -17,7 +17,7 @@ namespace Gumbo.Wrappers
         public TextWrapper(GumboTextNode node, NodeWrapper parent)
             : base (node, parent)
         {
-            Text = node.text.text;
+            Text = NativeUtf8Helper.StringFromNativeUtf8(node.text.text);
             StartPosition = node.text.start_pos;
         }
     }

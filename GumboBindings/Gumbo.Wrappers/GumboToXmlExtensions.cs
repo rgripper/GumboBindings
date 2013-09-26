@@ -28,19 +28,21 @@ namespace Gumbo.Wrappers
                     var elementNode = (GumboElementNode)node;
                     return new XElement(GetName(elementNode.element.tag), 
                         elementNode.element.GetChildren().Select(x => CreateXNode(x)),
-                        elementNode.element.GetAttributes().Select(x => new XAttribute(x.name, x.value)));
+                        elementNode.element.GetAttributes().Select(x => new XAttribute(
+                            NativeUtf8Helper.StringFromNativeUtf8(x.name), 
+                            NativeUtf8Helper.StringFromNativeUtf8(x.value))));
                 case GumboNodeType.GUMBO_NODE_TEXT:
                     var textNode = (GumboTextNode)node;
-                    return new XText(textNode.text.text);
+                    return new XText(NativeUtf8Helper.StringFromNativeUtf8(textNode.text.text));
                 case GumboNodeType.GUMBO_NODE_CDATA:
                     var cDataNode = (GumboTextNode)node;
-                    return new XCData(cDataNode.text.text);
+                    return new XCData(NativeUtf8Helper.StringFromNativeUtf8(cDataNode.text.text));
                 case GumboNodeType.GUMBO_NODE_COMMENT:
                     var commentNode = (GumboTextNode)node;
-                    return new XComment(commentNode.text.text);
+                    return new XComment(NativeUtf8Helper.StringFromNativeUtf8(commentNode.text.text));
                 case GumboNodeType.GUMBO_NODE_WHITESPACE:
                     var spaceNode = (GumboTextNode)node;
-                    return new XText(spaceNode.text.text);
+                    return new XText(NativeUtf8Helper.StringFromNativeUtf8(spaceNode.text.text));
                 default:
                     throw new NotSupportedException(String.Format("Unknown node type '{0}'", (int)node.type));
             }

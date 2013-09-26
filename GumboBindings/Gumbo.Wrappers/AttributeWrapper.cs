@@ -18,8 +18,8 @@ namespace Gumbo.Wrappers
 
         public AttributeWrapper(GumboAttribute attribute)
         {
-            Name = attribute.name;
-            Value = attribute.value;
+            Name = NativeUtf8Helper.StringFromNativeUtf8(attribute.name);
+            Value = NativeUtf8Helper.StringFromNativeUtf8(attribute.value);
             Namespace = attribute.attr_namespace;
         }
     }
