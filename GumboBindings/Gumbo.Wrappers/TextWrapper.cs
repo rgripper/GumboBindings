@@ -10,9 +10,9 @@ namespace Gumbo.Wrappers
 {
     public class TextWrapper : NodeWrapper
     {
-        public string Text;
+        public string Text { get; private set; }
 
-        public GumboSourcePosition StartPosition;
+        public GumboSourcePosition StartPosition { get; private set; }
 
         public TextWrapper(GumboTextNode node, NodeWrapper parent)
             : base (node, parent)
