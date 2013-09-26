@@ -24,3 +24,6 @@ It produces the following output:
       <body class="gumbo">Boo!</body>
     </html>
 
+Plans
+=============
+Adding C++ project to build gumbo from Visual Studio 2013 with C99 support when it's released.
