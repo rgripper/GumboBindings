@@ -26,19 +26,19 @@ namespace Gumbo.Wrappers
         public GumboSourcePosition EndPosition { get; private set; }
 
         /// GumboVector->Anonymous_9472dab0_f1a2_477f_aed9_f00825401fa7
-        public IEnumerable<GumboAttribute> Attributes { get; private set; }
+        public IEnumerable<AttributeWrapper> Attributes { get; private set; }
 
         public ElementWrapper(GumboElementNode node, NodeWrapper parent)
             : base(node, parent)
         {
             Children = node.element.GetChildren().Select(x => x is GumboElementNode
                 ? (NodeWrapper)new ElementWrapper((GumboElementNode)x, this)
-                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this));
+                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this)).ToList();
             Tag = node.element.tag;
             TagNamespace = node.element.tag_namespace;
             StartPosition = node.element.start_pos;
             EndPosition = node.element.end_pos;
-            Attributes = node.element.GetAttributes();
+            Attributes = node.element.GetAttributes().Select(x => new AttributeWrapper(x)).ToList();
         }
 
         /// GumboVector->Anonymous_9472dab0_f1a2_477f_aed9_f00825401fa7
