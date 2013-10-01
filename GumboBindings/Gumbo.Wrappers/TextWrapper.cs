@@ -14,10 +14,13 @@ namespace Gumbo.Wrappers
 
         public GumboSourcePosition StartPosition { get; private set; }
 
-        public TextWrapper(GumboTextNode node, NodeWrapper parent)
-            : base (node, parent)
+        public string OriginalText { get; private set; }
+
+        public TextWrapper(GumboWrapper disposableOwner, GumboTextNode node, NodeWrapper parent)
+            : base(disposableOwner, node, parent)
         {
             Text = NativeUtf8Helper.StringFromNativeUtf8(node.text.text);
+            OriginalText = NativeUtf8Helper.StringFromNativeUtf8(node.text.original_text.data, (int)node.text.original_text.length);
             StartPosition = node.text.start_pos;
         }
     }

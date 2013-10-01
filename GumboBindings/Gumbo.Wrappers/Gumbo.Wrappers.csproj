@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GumboToXmlExtensions.cs" />
+    <Compile Include="NativeUtf8Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AttributeWrapper.cs" />
     <Compile Include="DocumentWrapper.cs" />
@@ -47,7 +48,6 @@
     <Compile Include="GumboWrapper.cs" />
     <Compile Include="NodeWrapper.cs" />
     <Compile Include="TextWrapper.cs" />
-    <Compile Include="NativeUtf8Helper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gumbo.Bindings\Gumbo.Bindings.csproj">

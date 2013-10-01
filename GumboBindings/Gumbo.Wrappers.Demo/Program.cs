@@ -19,11 +19,13 @@ namespace Gumbo.Wrappers.Demo
             string testHtml = "<html><body class=\"gumbo\">привет!</body></html>";
             using (GumboWrapper gumbo = new GumboWrapper(testHtml))
             {
-                Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().Text);
-                Console.WriteLine("Attribute name:{0} attribute value:{1}",
-    gumbo.Document.Root.Elements().ElementAt(1).Attributes.First().Name,
-    gumbo.Document.Root.Elements().ElementAt(1).Attributes.First().Value);
-                Console.WriteLine(gumbo.ToXDocument());
+                Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().OriginalText);
+                Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).OriginalTag);
+                Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).OriginalEndTag);
+    //            Console.WriteLine("Attribute name:{0} attribute value:{1}",
+    //gumbo.Document.Root.Elements().ElementAt(1).Attributes.First().Name,
+    //gumbo.Document.Root.Elements().ElementAt(1).Attributes.First().Value);
+    //            Console.WriteLine(gumbo.ToXDocument());
             }
             Console.ReadLine();
         }

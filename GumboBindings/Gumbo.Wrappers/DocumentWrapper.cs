@@ -10,7 +10,9 @@ namespace Gumbo.Wrappers
 {
     public class DocumentWrapper : NodeWrapper
     {
-        public ElementWrapper Root { get; private set; }
+        private readonly Lazy<ElementWrapper> _Root;
+
+        public ElementWrapper Root { get { return _Root.Value; } }
 
         public bool HasDocType { get; private set; }
 
@@ -22,16 +24,21 @@ namespace Gumbo.Wrappers
 
         public GumboQuirksModeEnum DocTypeQuirksMode { get; private set; }
 
-        public DocumentWrapper(GumboDocumentNode node, NodeWrapper parent)
-            : base(node, parent)
+        public DocumentWrapper(GumboWrapper disposableOwner, GumboDocumentNode node, NodeWrapper parent)
+            : base(disposableOwner, node, parent)
         {
-            var root = node.document.GetChildren().First();
-            Root = new ElementWrapper((GumboElementNode)root, this);
+            _Root = new Lazy<ElementWrapper>(() => CreateRoot(node));
             HasDocType = node.document.has_doctype;
             Name = NativeUtf8Helper.StringFromNativeUtf8(node.document.name);
             PublicIdentifier = NativeUtf8Helper.StringFromNativeUtf8(node.document.public_identifier);
             SystemIdentifier = NativeUtf8Helper.StringFromNativeUtf8(node.document.system_identifier);
             DocTypeQuirksMode = node.document.doc_type_quirks_mode;
+        }
+
+        private ElementWrapper CreateRoot(GumboDocumentNode node)
+        {
+            ThrowIfOwnerDisposed();
+            return new ElementWrapper(this.DisposableOwner, (GumboElementNode)node.document.GetChildren().First(), this);
         }
     }
 }

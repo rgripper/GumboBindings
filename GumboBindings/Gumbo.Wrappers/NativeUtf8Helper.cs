@@ -31,10 +31,30 @@ namespace Gumbo.Wrappers
         /// <returns></returns>
         public static string StringFromNativeUtf8(IntPtr nativeUtf8) 
         {
+            if (nativeUtf8 == IntPtr.Zero)
+            {
+                return null;
+            }
             int length = 0;
             while (Marshal.ReadByte(nativeUtf8, length) != 0) length++;
             if (length == 0) return string.Empty;
             byte[] buffer = new byte[length];
+            Marshal.Copy(nativeUtf8, buffer, 0, buffer.Length);
+            return Encoding.UTF8.GetString(buffer);
+        }
+
+        /// <summary>
+        /// Reads all bytes as a null terminated UTF-8 string.
+        /// </summary>
+        /// <param name="nativeUtf8"></param>
+        /// <returns></returns>
+        public static string StringFromNativeUtf8(IntPtr nativeUtf8, int count)
+        {
+            if (nativeUtf8 == IntPtr.Zero)
+            {
+                return null;
+            }
+            byte[] buffer = new byte[count];
             Marshal.Copy(nativeUtf8, buffer, 0, buffer.Length);
             return Encoding.UTF8.GetString(buffer);
         }

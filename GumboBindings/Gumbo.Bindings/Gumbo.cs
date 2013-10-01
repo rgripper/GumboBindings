@@ -466,7 +466,7 @@ namespace Gumbo.Bindings
          * The original text of the attribute name, as a pointer into the original
          * source buffer.
          */
-        GumboStringPiece original_name;
+        public GumboStringPiece original_name;
 
         /// char*
         public IntPtr value;
@@ -525,14 +525,14 @@ namespace Gumbo.Bindings
          * algorithmically (for example, <head> or <tbody> insertion), this will be a
          * zero-length string.
          */
-        GumboStringPiece original_tag;
+        public GumboStringPiece original_tag;
 
         /**
          * A GumboStringPiece pointing to the original end tag text for this element.
          * If the end tag was inserted algorithmically, (for example, closing a
          * self-closing tag), this will be a zero-length string.
          */
-        GumboStringPiece original_end_tag;
+        public GumboStringPiece original_end_tag;
 
         /// GumboSourcePosition->Anonymous_b1ac5e09_64df_4170_b0b1_3753090b5fc0
         public GumboSourcePosition start_pos;
@@ -554,7 +554,7 @@ namespace Gumbo.Bindings
          * The original text of this node, as a pointer into the original buffer.  For
          * comment/cdata nodes, this includes the comment delimiters.
          */
-        GumboStringPiece original_text;
+        public GumboStringPiece original_text;
 
         /// GumboSourcePosition->Anonymous_b1ac5e09_64df_4170_b0b1_3753090b5fc0
         public GumboSourcePosition start_pos;

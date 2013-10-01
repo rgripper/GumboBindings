@@ -19,13 +19,23 @@ namespace Gumbo.Wrappers
 
         public NodeWrapper Parent { get; private set; }
 
-        public NodeWrapper(GumboNode node, NodeWrapper parent)
+        protected GumboWrapper DisposableOwner;
+
+        public NodeWrapper(GumboWrapper disposableOwner, GumboNode node, NodeWrapper parent)
 	    {
+            DisposableOwner = disposableOwner;
             Type = node.type;
             Index = (int)node.index_within_parent;
             ParseFlags = node.parse_flags;
             Parent = parent;
-            
 	    }
+
+        protected void ThrowIfOwnerDisposed()
+        {
+            if (DisposableOwner.Disposed)
+            {
+                throw new ObjectDisposedException("GumboWrapper has already been disposed");
+            }
+        }
     }
 }

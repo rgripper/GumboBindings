@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Gumbo.Bindings
 {
@@ -75,8 +76,7 @@ namespace Gumbo.Bindings
     public struct GumboStringPiece
     {
         /** A pointer to the beginning of the string.  NULL iff length == 0. */
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string data;
+        public IntPtr data;
 
         /** The length of the string fragment, in bytes.  May be zero. */
         public uint length;

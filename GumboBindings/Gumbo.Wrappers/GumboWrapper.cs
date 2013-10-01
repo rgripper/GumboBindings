@@ -23,6 +23,8 @@ namespace Gumbo.Wrappers
 
         public IEnumerable<GumboErrorContainer> Errors { get; private set; }
 
+        internal bool Disposed = false;
+
         public GumboWrapper(string html, bool stopOnFirstError = false, int maxErrors = -1)
         {
             _Options = GumboExtensions.MarshalProcAddress<GumboOptions>("kGumboDefaultOptions");
@@ -33,7 +35,7 @@ namespace Gumbo.Wrappers
             var output = (GumboOutput)Marshal.PtrToStructure(_OutputPtr, typeof(GumboOutput));
             _GumboDocumentNode = output.GetDocument();
             Errors = output.GetErrors();
-            Document = new DocumentWrapper(_GumboDocumentNode, null);
+            Document = new DocumentWrapper(this, _GumboDocumentNode, null);
         }
 
         public XDocument ToXDocument()
@@ -43,6 +45,12 @@ namespace Gumbo.Wrappers
 
         public void Dispose()
         {
+            if (Disposed)
+            {
+                return;
+            }
+
+            Disposed = true;
             Marshal.FreeHGlobal(_Html);
             NativeMethods.gumbo_destroy_output(ref _Options, _OutputPtr);
         }
