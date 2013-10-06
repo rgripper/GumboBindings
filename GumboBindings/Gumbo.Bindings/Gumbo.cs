@@ -154,6 +154,7 @@ namespace Gumbo.Bindings
         public uint capacity;
     }
 
+    //ilia: изменился порядок (количество) элементов перечисления в оригинальной библиотеке
     public enum GumboTag
     {
         GUMBO_TAG_HTML,
@@ -174,13 +175,15 @@ namespace Gumbo.Bindings
 
         GUMBO_TAG_NOSCRIPT,
 
+        GUMBO_TAG_TEMPLATE, 
+        
         GUMBO_TAG_BODY,
 
-        GUMBO_TAG_SECTION,
-
-        GUMBO_TAG_NAV,
-
         GUMBO_TAG_ARTICLE,
+
+        GUMBO_TAG_SECTION,
+    
+        GUMBO_TAG_NAV,
 
         GUMBO_TAG_ASIDE,
 
@@ -228,6 +231,8 @@ namespace Gumbo.Bindings
 
         GUMBO_TAG_FIGCAPTION,
 
+        GUMBO_TAG_MAIN,
+
         GUMBO_TAG_DIV,
 
         GUMBO_TAG_A,
@@ -248,6 +253,8 @@ namespace Gumbo.Bindings
 
         GUMBO_TAG_ABBR,
 
+        GUMBO_TAG_DATA,
+
         GUMBO_TAG_TIME,
 
         GUMBO_TAG_CODE,
@@ -265,6 +272,8 @@ namespace Gumbo.Bindings
         GUMBO_TAG_I,
 
         GUMBO_TAG_B,
+
+        GUMBO_TAG_U,
 
         GUMBO_TAG_MARK,
 
@@ -392,9 +401,9 @@ namespace Gumbo.Bindings
 
         GUMBO_TAG_SUMMARY,
 
-        GUMBO_TAG_COMMAND,
-
         GUMBO_TAG_MENU,
+
+        GUMBO_TAG_MENUITEM,
 
         GUMBO_TAG_APPLET,
 
@@ -445,8 +454,6 @@ namespace Gumbo.Bindings
         GUMBO_TAG_SPACER,
 
         GUMBO_TAG_TT,
-
-        GUMBO_TAG_U,
 
         GUMBO_TAG_UNKNOWN,
 
