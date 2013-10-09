@@ -15,8 +15,7 @@ namespace Gumbo.Bindings
         // A pointer to the byte within the original source file text where the error
         // occurred (note that this is not the same as position.offset, as that gives
         // character-based instead of byte-based offsets).
-        [MarshalAsAttribute(UnmanagedType.LPStr)]
-        public string original_text;
+        public IntPtr original_text;
     }
 
     [StructLayoutAttribute(LayoutKind.Sequential)]

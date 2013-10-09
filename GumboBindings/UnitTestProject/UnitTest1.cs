@@ -54,30 +54,5 @@ namespace UnitTestProject
                 Assert.AreEqual("gumbo", list[1].Attributes.First().Value);
             }
         }
-
-
-
-        [TestMethod]
-        public void TestTextNodeOriginalText()
-        {
-            //думаю, что OriginalText может содержать мусор и использовать это поле не нужно вообще
-
-            //string testHtml = "<html><body class=\"gumbo\">привет!</body></html>";
-            //using (GumboWrapper gumbo = new GumboWrapper(testHtml))
-            //{
-            //    //ок, пусть вторым будет GUMBO_TAG_SECTION, я ожидаю, что в нем есть элемент GUMBO_NODE_TEXT
-            //    var body = (gumbo.Document.Root.Children.ElementAt(1) as ElementWrapper);
-            //    var firstNode = body.Children.ElementAt(0);
-            //    Assert.AreEqual(GumboNodeType.GUMBO_NODE_TEXT, firstNode.Type);
-            //    //и он содержит значение привет!
-            //    var textNode = firstNode as TextWrapper;
-            //    Assert.AreEqual("привет!", textNode.Text);
-            //    //а так же я ожидаю, что OriginalText содержит значение привет!
-            //    Assert.AreEqual("привет!", textNode.OriginalText);
-            //    //вместо этого OriginalText содержит привет!</body></html>
-            //}
-            Assert.IsTrue(true);
-        }
-
     }
 }
