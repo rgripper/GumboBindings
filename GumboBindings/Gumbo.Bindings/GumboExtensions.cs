@@ -88,25 +88,6 @@ namespace Gumbo.Bindings
             }
         }
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        private static extern IntPtr LoadLibrary(String dllName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr module, string name);
-
-        //public static IntPtr MarshalProcAddress(string name)
-        //{
-        //    IntPtr gumboModulePtr = GetModuleHandle("gumbo.dll");
-        //    return GetProcAddress(gumboModulePtr, name);
-        //}
-
-        public static T MarshalProcAddress<T>(string name)
-        {
-            IntPtr gumboModulePtr = LoadLibrary("gumbo.dll");
-            IntPtr ptr = GetProcAddress(gumboModulePtr, name);
-            return MarshalTo<T>(ptr);
-        }
-
         private static T MarshalTo<T>(IntPtr pointer)
         {
             return (T)Marshal.PtrToStructure(pointer, typeof(T));

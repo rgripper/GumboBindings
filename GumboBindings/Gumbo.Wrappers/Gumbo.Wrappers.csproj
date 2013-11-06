@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +49,7 @@
     <Compile Include="GumboWrapper.cs" />
     <Compile Include="NodeWrapper.cs" />
     <Compile Include="TextWrapper.cs" />
+    <Compile Include="UnmanagedLibrary.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gumbo.Bindings\Gumbo.Bindings.csproj">

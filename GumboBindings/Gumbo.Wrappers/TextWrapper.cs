@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Gumbo.Wrappers
 {
-
     [DebuggerDisplay("Type = {Type}, Text = {Text}")]
     public class TextWrapper : NodeWrapper
     {
@@ -17,11 +16,20 @@ namespace Gumbo.Wrappers
 
         public GumboSourcePosition StartPosition { get; private set; }
 
+        public override IEnumerable<NodeWrapper> Children
+        {
+            get 
+            {
+                return Enumerable.Empty<NodeWrapper>();
+            }
+        }
+
         public TextWrapper(GumboWrapper disposableOwner, GumboTextNode node, NodeWrapper parent)
             : base(disposableOwner, node, parent)
         {
             Text = NativeUtf8Helper.StringFromNativeUtf8(node.text.text);
             StartPosition = node.text.start_pos;
         }
+
     }
 }

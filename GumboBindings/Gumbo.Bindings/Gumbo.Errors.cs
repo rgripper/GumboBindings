@@ -82,6 +82,19 @@ namespace Gumbo.Bindings
     }
 
     [StructLayoutAttribute(LayoutKind.Sequential)]
+    public struct GumboDuplicateAttrError
+    {
+        /// char*
+        public IntPtr name;
+
+        /// unsigned int
+        public uint original_index;
+
+        /// unsigned int
+        public uint new_index;
+    }
+
+    [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct GumboParserError
     {
         // The type of input token that resulted in this error.

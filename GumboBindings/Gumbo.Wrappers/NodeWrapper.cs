@@ -11,16 +11,16 @@ namespace Gumbo.Wrappers
     {
         public GumboNodeType Type { get; private set; }
 
-        /// size_t->unsigned int
         public int Index { get; private set; }
 
-        /// GumboParseFlags->Anonymous_a2031eb3_cd7b_4b09_98eb_e950ead0223f
         public GumboParseFlags ParseFlags { get; private set; }
 
         public NodeWrapper Parent { get; private set; }
 
-        protected GumboWrapper DisposableOwner;
+        public abstract IEnumerable<NodeWrapper> Children { get; }
 
+        protected readonly GumboWrapper DisposableOwner;
+        
         public NodeWrapper(GumboWrapper disposableOwner, GumboNode node, NodeWrapper parent)
 	    {
             DisposableOwner = disposableOwner;
@@ -29,6 +29,11 @@ namespace Gumbo.Wrappers
             ParseFlags = node.parse_flags;
             Parent = parent;
 	    }
+
+        public IEnumerable<ElementWrapper> Elements()
+        {
+            return Children.OfType<ElementWrapper>();
+        }
 
         protected void ThrowIfOwnerDisposed()
         {

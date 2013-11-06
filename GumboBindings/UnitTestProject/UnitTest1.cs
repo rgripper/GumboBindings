@@ -6,8 +6,6 @@ using Gumbo.Bindings;
 
 namespace UnitTestProject
 {
-    //ilia: по идее можно исключить демо проект, а оставить вместо него тестовый
-
     [TestClass]
     public class UnitTest1
     {
@@ -34,7 +32,6 @@ namespace UnitTestProject
             string testHtml = "<html><body class=\"gumbo\">привет!</body></html>";
             using (GumboWrapper gumbo = new GumboWrapper(testHtml))
             {
-                //Видимо теперь первым всегда идет head, даже если его нет в оригинале
                 var list = gumbo.Document.Root.Children.OfType<ElementWrapper>().ToList();
                 Assert.AreEqual(GumboTag.GUMBO_TAG_HEAD, list[0].Tag);
                 Assert.AreEqual(null, list[0].OriginalTag);

@@ -18,6 +18,8 @@ namespace Gumbo.Wrappers
 
         public string OriginalName { get; private set; }
 
+        public string OriginalValue { get; private set; }
+
         public GumboSourcePosition NameStart { get; private set; }
 
         public GumboSourcePosition NameEnd { get; private set; }
@@ -33,6 +35,7 @@ namespace Gumbo.Wrappers
             Name = NativeUtf8Helper.StringFromNativeUtf8(attribute.name);
             Value = NativeUtf8Helper.StringFromNativeUtf8(attribute.value);
             OriginalName = NativeUtf8Helper.StringFromNativeUtf8(attribute.original_name.data, (int)attribute.original_name.length);
+            OriginalValue = NativeUtf8Helper.StringFromNativeUtf8(attribute.original_value.data, (int)attribute.original_value.length);
             NameStart = attribute.name_start;
             NameEnd = attribute.name_end;
             ValueStart = attribute.value_start;

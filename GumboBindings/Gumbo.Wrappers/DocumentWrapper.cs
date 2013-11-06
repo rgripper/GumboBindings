@@ -10,8 +10,6 @@ namespace Gumbo.Wrappers
 {
     public class DocumentWrapper : NodeWrapper
     {
-        private readonly Lazy<ElementWrapper> _Root;
-
         public ElementWrapper Root { get { return _Root.Value; } }
 
         public bool HasDocType { get; private set; }
@@ -23,6 +21,16 @@ namespace Gumbo.Wrappers
         public string SystemIdentifier { get; private set; }
 
         public GumboQuirksModeEnum DocTypeQuirksMode { get; private set; }
+
+        public override IEnumerable<NodeWrapper> Children
+        {
+            get 
+            {
+                yield return Root;
+            }
+        }
+
+        private readonly Lazy<ElementWrapper> _Root;
 
         public DocumentWrapper(GumboWrapper disposableOwner, GumboDocumentNode node, NodeWrapper parent)
             : base(disposableOwner, node, parent)

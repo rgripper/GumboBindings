@@ -12,11 +12,7 @@ namespace Gumbo.Wrappers
     [DebuggerDisplay("Type = {Type}, Tag = {Tag}")]
     public class ElementWrapper : NodeWrapper
     {
-        private readonly Lazy<IEnumerable<NodeWrapper>> _Children;
-
-        public IEnumerable<NodeWrapper> Children { get { return _Children.Value; } }
-
-        private readonly Lazy<IEnumerable<AttributeWrapper>> _Attributes;
+        public override IEnumerable<NodeWrapper> Children { get { return _Children.Value; } }
 
         public IEnumerable<AttributeWrapper> Attributes { get { return _Attributes.Value; } }
 
@@ -32,6 +28,10 @@ namespace Gumbo.Wrappers
 
         public string OriginalEndTag { get; private set; }
 
+        private readonly Lazy<IEnumerable<NodeWrapper>> _Children;
+
+        private readonly Lazy<IEnumerable<AttributeWrapper>> _Attributes;
+
         public ElementWrapper(GumboWrapper disposableOwner, GumboElementNode node, NodeWrapper parent)
             : base(disposableOwner, node, parent)
         {
@@ -45,11 +45,6 @@ namespace Gumbo.Wrappers
 
             OriginalTag = NativeUtf8Helper.StringFromNativeUtf8(node.element.original_tag.data, (int)node.element.original_tag.length);
             OriginalEndTag = NativeUtf8Helper.StringFromNativeUtf8(node.element.original_end_tag.data, (int)node.element.original_end_tag.length);
-        }
-
-        public IEnumerable<ElementWrapper> Elements()
-        {
-            return Children.OfType<ElementWrapper>();
         }
 
         private IEnumerable<NodeWrapper> CreateChildren(GumboElementNode node)
