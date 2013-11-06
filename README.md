@@ -24,6 +24,15 @@ It produces the following output:
       <body class="gumbo">Boo!</body>
     </html>
 
-Plans
+Utility projects
 =============
-Adding C++ project to build gumbo from Visual Studio 2013 with C99 support when it's released.
+
+Gumbo (C++ Project)
+-------------
+This project compiles C sources into DLL using .DEF file containing exports used by P/Invokes.
+
+Gumbo.DefGen (C# Console Project)
+-------------
+Uses dumpbin.exe to generate exports from static library .LIB file and outputs .DEF file, consumed by C compiler.
+Static library is compiled by simply switching an option in project settings for Gumbo (C++ Project).
+Library name and path to VS bin folder containing dumpbin.exe are set in App.config.
