@@ -5,8 +5,7 @@ C# bindings for Gumbo - a pure-C HTML5 parser
 Types member names are preserved the way they appear in the original code to make API change tracking easier.
 To simplify usage there are wrappers for the main classes.
 
-Basic usage of the wrapper classes
-=============
+## Basic usage of the wrapper classes
 
     string testHtml = "<html><body class=\"gumbo\">Boo!</body></html>";
     using (GumboWrapper gumbo = new GumboWrapper(testHtml))
@@ -24,15 +23,14 @@ It produces the following output:
       <body class="gumbo">Boo!</body>
     </html>
 
-Utility projects
-=============
+## Utility projects
 
-Gumbo (C++ Project)
--------------
+### Gumbo (C++ Project)
+
 This project compiles C sources into DLL using .DEF file containing exports used by P/Invokes.
 
-Gumbo.DefGen (C# Console Project)
--------------
+### Gumbo.DefGen (C# Console Project)
+
 Uses dumpbin.exe to generate exports from static library .LIB file and outputs .DEF file, consumed by C compiler.
 Static library is compiled by simply switching an option in project settings for Gumbo (C++ Project).
 Library name and path to VS bin folder containing dumpbin.exe are set in App.config.
