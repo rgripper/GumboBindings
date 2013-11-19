@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gumbo.Bindings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -6,23 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Gumbo.Bindings
+namespace Gumbo.Wrappers
 {
     public static class GumboExtensions
     {
-        public static IEnumerable<GumboNode> GetChildren(this GumboElement element)
+        public static string MarshalToString(this GumboStringPiece stringPiece)
         {
-            return MarshalToPtrArray(element.children).Select(MarshalToSpecificNode);
+            return NativeUtf8Helper.StringFromNativeUtf8(stringPiece.data, (int)stringPiece.length);
         }
 
-        public static IEnumerable<GumboNode> GetChildren(this GumboDocument element)
+        public static IEnumerable<GumboNode> GetChildren(this GumboElementNode node)
         {
-            return MarshalToPtrArray(element.children).Select(MarshalToSpecificNode);
+            return MarshalToPtrArray(node.element.children).Select(MarshalToSpecificNode);
         }
 
-        public static IEnumerable<GumboAttribute> GetAttributes(this GumboElement element)
+        public static IEnumerable<GumboNode> GetChildren(this GumboDocumentNode node)
         {
-            return MarshalToPtrArray(element.attributes).Select(MarshalTo<GumboAttribute>);
+            return MarshalToPtrArray(node.document.children).Select(MarshalToSpecificNode);
+        }
+
+        public static IEnumerable<GumboAttribute> GetAttributes(this GumboElementNode node)
+        {
+            return MarshalToPtrArray(node.element.attributes).Select(MarshalTo<GumboAttribute>);
         }
 
         public static GumboDocumentNode GetDocument(this GumboOutput output)
@@ -40,7 +46,7 @@ namespace Gumbo.Bindings
             return MarshalToPtrArray(output.errors).Select(MarshalToSpecificErrorContainer);
         }
 
-        public static GumboErrorContainer MarshalToSpecificErrorContainer(IntPtr errorPointer)
+        private static GumboErrorContainer MarshalToSpecificErrorContainer(IntPtr errorPointer)
         {
             var error = MarshalTo<GumboErrorContainer>(errorPointer);
             switch (error.type)
@@ -69,20 +75,20 @@ namespace Gumbo.Bindings
         /// </summary>
         /// <param name="nodePointer"></param>
         /// <returns></returns>
-        public static GumboNode MarshalToSpecificNode(IntPtr nodePointer)
+        private static GumboNode MarshalToSpecificNode(IntPtr nodePointer)
         {
             GumboNode node = (GumboNode)Marshal.PtrToStructure(nodePointer, typeof(GumboNode));
             switch (node.type)
             {
                 case GumboNodeType.GUMBO_NODE_DOCUMENT:
-                    return (GumboDocumentNode)Marshal.PtrToStructure(nodePointer, typeof(GumboDocumentNode));
+                    return MarshalTo<GumboDocumentNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_ELEMENT:
-                    return (GumboElementNode)Marshal.PtrToStructure(nodePointer, typeof(GumboElementNode));
+                    return MarshalTo<GumboElementNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_TEXT:
                 case GumboNodeType.GUMBO_NODE_CDATA:
                 case GumboNodeType.GUMBO_NODE_COMMENT:
                 case GumboNodeType.GUMBO_NODE_WHITESPACE:
-                    return (GumboTextNode)Marshal.PtrToStructure(nodePointer, typeof(GumboTextNode));
+                    return MarshalTo<GumboTextNode>(nodePointer);
                 default:
                     throw new NotSupportedException(String.Format("Unknown node type '{0}'", (int)node.type));
             }

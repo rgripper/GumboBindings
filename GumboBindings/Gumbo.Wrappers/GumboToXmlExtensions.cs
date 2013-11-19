@@ -10,6 +10,12 @@ using Gumbo.Bindings;
 
 namespace Gumbo.Wrappers
 {
+    public enum NodeFilterMode
+    {
+        RemoveUnfitNodes,
+        RemoveUnfitNodesAndPromoteChildren
+    }
+
     public static class GumboToXmlExtensions
     {
         public static XDocument ToXDocument(this GumboDocumentNode docNode)
@@ -23,14 +29,14 @@ namespace Gumbo.Wrappers
             {
                 case GumboNodeType.GUMBO_NODE_DOCUMENT:
                     var docNode = (GumboDocumentNode)node;
-                    return new XDocument(docNode.document.GetChildren().Select(x => CreateXNode(x)));
+                    return new XDocument(docNode.GetChildren().Select(x => CreateXNode(x)));
                 case GumboNodeType.GUMBO_NODE_ELEMENT:
                     var elementNode = (GumboElementNode)node;
                     string elementName = GetName(elementNode.element.tag);
-                    var attributes = elementNode.element.GetAttributes().Select(x => new XAttribute(
+                    var attributes = elementNode.GetAttributes().Select(x => new XAttribute(
                             NativeUtf8Helper.StringFromNativeUtf8(x.name),
                             NativeUtf8Helper.StringFromNativeUtf8(x.value)));
-                    var children = elementNode.element.GetChildren().Select(x => CreateXNode(x));
+                    var children = elementNode.GetChildren().Select(x => CreateXNode(x));
                     return new XElement(elementName, attributes, children);
                 case GumboNodeType.GUMBO_NODE_TEXT:
                     var textNode = (GumboTextNode)node;

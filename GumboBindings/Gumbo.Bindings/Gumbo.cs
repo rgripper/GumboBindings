@@ -76,7 +76,6 @@ namespace Gumbo.Bindings
         /// Whether or not to stop parsing when the first error is encountered.
         /// Default: false.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.I1)]
         public bool stop_on_first_error;
 
         /// <summary>
@@ -305,7 +304,7 @@ namespace Gumbo.Bindings
         GUMBO_TAG_HEADER,
         GUMBO_TAG_FOOTER,
         GUMBO_TAG_ADDRESS,
-        
+
         /// <summary>
         ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/grouping-content.html#grouping-content
         /// </summary>
@@ -323,7 +322,7 @@ namespace Gumbo.Bindings
         GUMBO_TAG_FIGCAPTION,
         GUMBO_TAG_MAIN,
         GUMBO_TAG_DIV,
-        
+
         /// <summary>
         /// http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#text-level-semantics
         /// </summary>
@@ -433,7 +432,7 @@ namespace Gumbo.Bindings
         GUMBO_TAG_OUTPUT,
         GUMBO_TAG_PROGRESS,
         GUMBO_TAG_METER,
-       
+
         /// <summary>
         /// http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#interactive-elements
         /// </summary>
@@ -471,7 +470,7 @@ namespace Gumbo.Bindings
         GUMBO_TAG_NOBR,
         GUMBO_TAG_SPACER,
         GUMBO_TAG_TT,
-        
+
         /// <summary>
         /// Used for all tags that don't have special handling in HTML.
         /// </summary>
@@ -529,7 +528,7 @@ namespace Gumbo.Bindings
         /// string.
         /// </summary>
         public GumboStringPiece original_value;
-        
+
         /// <summary>
         /// The starting position of the attribute name.
         /// </summary>
@@ -569,7 +568,7 @@ namespace Gumbo.Bindings
         /// <summary>
         /// True if there was an explicit doctype token as opposed to it being omitted.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.I1)]
+        [MarshalAs(UnmanagedType.I1)]
         public bool has_doctype;
 
         /// <summary>
@@ -614,7 +613,7 @@ namespace Gumbo.Bindings
         /// <summary>
         /// A GumboStringPiece pointing to the original tag text for this element,
         /// pointing directly into the source buffer.  If the tag was inserted
-        /// algorithmically (for example, <head> or <tbody> insertion), this will be a
+        /// algorithmically (for example, &lt;head&gt; or &lt;tbodygt; insertion), this will be a
         /// zero-length string.
         /// </summary>
         public GumboStringPiece original_tag;
@@ -732,6 +731,32 @@ namespace Gumbo.Bindings
 
     public partial class NativeMethods
     {
+        private const string LibraryName = "gumbo.dll";
+
+        /// <summary>
+        /// Extracts the tag name from the original_text field of an element or token by
+        /// stripping off &lt;/&gt; characters and attributes and adjusting the passed-in
+        /// GumboStringPiece appropriately.  The tag name is in the original case and
+        /// shares a buffer with the original text, to simplify memory management.
+        /// Behavior is undefined if a string-piece that doesn't represent an HTML tag
+        /// (&lt;tagname&gt; or &lt;/tagname&gt;) is passed in. If the string piece is completely
+        /// empty (NULL data pointer), then this function will exit successfully as a
+        /// no-op.
+        /// </summary>
+        /// <param name="text"></param>
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void gumbo_tag_from_original_text(ref GumboStringPiece text);
+
+        /// <summary>
+        /// Returns the normalized (usually all-lowercased, except for foreign content)
+        /// tag name for an GumboTag enum.  Return value is static data owned by the
+        /// library.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr gumbo_normalized_tagname(GumboTag tag);
+
         /// <summary>
         /// Parses a buffer of UTF8 text into an GumboNode parse tree.  The buffer must
         /// live at least as long as the parse tree, as some fields (eg. original_text)
@@ -742,7 +767,7 @@ namespace Gumbo.Bindings
         /// </remarks>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_parse", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr gumbo_parse(IntPtr buffer);
 
         /// <summary>
@@ -753,15 +778,25 @@ namespace Gumbo.Bindings
         /// <param name="buffer"></param>
         /// <param name="buffer_length"></param>
         /// <returns></returns>
-        [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_parse_with_options", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, IntPtr buffer, [MarshalAsAttribute(UnmanagedType.SysUInt)] uint buffer_length);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr gumbo_parse_with_options(ref GumboOptions options, IntPtr buffer, [MarshalAs(UnmanagedType.SysUInt)] uint buffer_length);
 
         /// <summary>
-        /// Release the memory used for the parse tree & parse errors.
+        /// Release the memory used for the parse tree and parse errors.
         /// </summary>
         /// <param name="options"></param>
         /// <param name="output"></param>
-        [DllImportAttribute("gumbo.dll", EntryPoint = "gumbo_destroy_output", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void gumbo_destroy_output(ref GumboOptions options, IntPtr output);
+
+        /// <summary>
+        /// Create options for method <see cref="gumbo_parse_with_options"/>.
+        /// </summary>
+        /// <param name="tab_stop">The tab-stop size, for computing positions in source code that uses tabs.</param>
+        /// <param name="stop_on_first_error"></param>
+        /// <param name="max_errors"></param>
+        /// <returns></returns>
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void gumbo_set_options_defaults(ref GumboOptions options);
     }
 }

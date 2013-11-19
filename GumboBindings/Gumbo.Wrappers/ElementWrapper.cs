@@ -16,6 +16,8 @@ namespace Gumbo.Wrappers
 
         public IEnumerable<AttributeWrapper> Attributes { get { return _Attributes.Value; } }
 
+        public string Value { get { return _Value.Value; } }
+
         public GumboTag Tag { get; private set; }
 
         public GumboNamespaceEnum TagNamespace { get; private set; }
@@ -26,39 +28,66 @@ namespace Gumbo.Wrappers
 
         public string OriginalTag { get; private set; }
 
+        /// <summary>
+        /// Returns lower-case name of every known HTML tag (according to the value of property <see cref="Tag"/>).
+        /// For unknown tags returns empty string (where <see cref="Tag"/> is GUMBO_TAG_UNKNOWN).
+        /// </summary>
+        public string NormalizedTagName { get; private set; }
+
+        public string OriginalTagName { get; private set; }
+
         public string OriginalEndTag { get; private set; }
 
         private readonly Lazy<IEnumerable<NodeWrapper>> _Children;
 
         private readonly Lazy<IEnumerable<AttributeWrapper>> _Attributes;
 
-        public ElementWrapper(GumboWrapper disposableOwner, GumboElementNode node, NodeWrapper parent)
-            : base(disposableOwner, node, parent)
-        {
-            _Children = new Lazy<IEnumerable<NodeWrapper>>(() => CreateChildren(node));
-            _Attributes = new Lazy<IEnumerable<AttributeWrapper>>(() => CreateAttributes(node));
+        private readonly Lazy<string> _Value;
 
-            Tag = node.element.tag;
-            TagNamespace = node.element.tag_namespace;
+        internal ElementWrapper(GumboElementNode node, NodeWrapper parent, DisposalAwareLazyFactory lazyFactory, 
+            Action<string, ElementWrapper> addElementWithId)
+            : base(node, parent)
+        {
+
+            _Children = lazyFactory.Create<IEnumerable<NodeWrapper>>(() => 
+            {
+                return node.GetChildren().Select(x => x is GumboElementNode
+                ? (NodeWrapper)new ElementWrapper((GumboElementNode)x, this, lazyFactory, addElementWithId)
+                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this)).ToList();
+            });
+
+            _Attributes = lazyFactory.Create<IEnumerable<AttributeWrapper>>(() => 
+            {
+                return node.GetAttributes().Select((x, i) => 
+                    new AttributeWrapper(x, this, i, addElementWithId)).ToList();
+            });
+
+            _Value = lazyFactory.Create<string>(() =>
+            {
+                return String.Concat(this.Children.Select(x => x is ElementWrapper
+                    ? ((ElementWrapper)x).Value
+                    : ((TextWrapper)x).Text));
+            });
+
             StartPosition = node.element.start_pos;
             EndPosition = node.element.end_pos;
 
-            OriginalTag = NativeUtf8Helper.StringFromNativeUtf8(node.element.original_tag.data, (int)node.element.original_tag.length);
-            OriginalEndTag = NativeUtf8Helper.StringFromNativeUtf8(node.element.original_end_tag.data, (int)node.element.original_end_tag.length);
+            Tag = node.element.tag;
+            TagNamespace = node.element.tag_namespace;
+            OriginalTag = NativeUtf8Helper.StringFromNativeUtf8(
+                node.element.original_tag.data, (int)node.element.original_tag.length);
+            OriginalTagName = GetTagNameFromOriginalTag(node.element);
+            OriginalEndTag = NativeUtf8Helper.StringFromNativeUtf8(
+                node.element.original_end_tag.data, (int)node.element.original_end_tag.length);
+            NormalizedTagName = NativeUtf8Helper.StringFromNativeUtf8(
+                NativeMethods.gumbo_normalized_tagname(node.element.tag));
         }
 
-        private IEnumerable<NodeWrapper> CreateChildren(GumboElementNode node)
+        private static string GetTagNameFromOriginalTag(GumboElement element)
         {
-            ThrowIfOwnerDisposed();
-            return node.element.GetChildren().Select(x => x is GumboElementNode
-                ? (NodeWrapper)new ElementWrapper(this.DisposableOwner, (GumboElementNode)x, this)
-                : (NodeWrapper)new TextWrapper(this.DisposableOwner, (GumboTextNode)x, this)).ToList();
-        }
-
-        private IEnumerable<AttributeWrapper> CreateAttributes(GumboElementNode node)
-        {
-            ThrowIfOwnerDisposed();
-            return node.element.GetAttributes().Select(x => new AttributeWrapper(x)).ToList();
+            var temp = element.original_tag;
+            NativeMethods.gumbo_tag_from_original_text(ref temp);
+            return temp.MarshalToString();
         }
     }
 }

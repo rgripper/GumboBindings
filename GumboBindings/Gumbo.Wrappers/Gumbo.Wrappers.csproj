@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisposalAwareLazyFactory.cs" />
+    <Compile Include="GumboExtensions.cs" />
+    <Compile Include="GumboNavigator.cs" />
     <Compile Include="GumboToXmlExtensions.cs" />
     <Compile Include="NativeUtf8Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,7 +52,6 @@
     <Compile Include="GumboWrapper.cs" />
     <Compile Include="NodeWrapper.cs" />
     <Compile Include="TextWrapper.cs" />
-    <Compile Include="UnmanagedLibrary.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gumbo.Bindings\Gumbo.Bindings.csproj">

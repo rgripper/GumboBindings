@@ -12,9 +12,9 @@ namespace Gumbo.Wrappers
     [DebuggerDisplay("Type = {Type}, Text = {Text}")]
     public class TextWrapper : NodeWrapper
     {
-        public string Text { get; private set; }
+        public string Text { get; internal set; }
 
-        public GumboSourcePosition StartPosition { get; private set; }
+        public GumboSourcePosition StartPosition { get; internal set; }
 
         public override IEnumerable<NodeWrapper> Children
         {
@@ -24,8 +24,8 @@ namespace Gumbo.Wrappers
             }
         }
 
-        public TextWrapper(GumboWrapper disposableOwner, GumboTextNode node, NodeWrapper parent)
-            : base(disposableOwner, node, parent)
+        internal TextWrapper(GumboTextNode node, NodeWrapper parent)
+            : base(node, parent)
         {
             Text = NativeUtf8Helper.StringFromNativeUtf8(node.text.text);
             StartPosition = node.text.start_pos;

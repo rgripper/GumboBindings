@@ -19,28 +19,12 @@ namespace Gumbo.Wrappers
 
         public abstract IEnumerable<NodeWrapper> Children { get; }
 
-        protected readonly GumboWrapper DisposableOwner;
-        
-        public NodeWrapper(GumboWrapper disposableOwner, GumboNode node, NodeWrapper parent)
-	    {
-            DisposableOwner = disposableOwner;
+        public NodeWrapper(GumboNode node, NodeWrapper parent)
+        {
             Type = node.type;
             Index = (int)node.index_within_parent;
             ParseFlags = node.parse_flags;
             Parent = parent;
-	    }
-
-        public IEnumerable<ElementWrapper> Elements()
-        {
-            return Children.OfType<ElementWrapper>();
-        }
-
-        protected void ThrowIfOwnerDisposed()
-        {
-            if (DisposableOwner.Disposed)
-            {
-                throw new ObjectDisposedException("GumboWrapper has already been disposed");
-            }
         }
     }
 }

@@ -7,7 +7,7 @@ using Gumbo.Bindings;
 namespace UnitTestProject
 {
     [TestClass]
-    public class UnitTest1
+    public class GumboWrapperTest
     {
         [TestMethod]
         public void TestFirstAndLastTagsInEnum()
@@ -40,7 +40,7 @@ namespace UnitTestProject
         }
 
         [TestMethod]
-        public void TestAtributes()
+        public void TestAttributes()
         {
             string testHtml = "<html><body class=\"gumbo\">привет!</body></html>";
             using (GumboWrapper gumbo = new GumboWrapper(testHtml))

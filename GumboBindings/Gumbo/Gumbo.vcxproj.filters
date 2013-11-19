@@ -48,6 +48,9 @@
     <ClCompile Include="src\vector.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="extra\extra.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\strings.h">
@@ -98,6 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Gumbo.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\Gumbo.DefGen\bin\Debug\Gumbo.def">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
