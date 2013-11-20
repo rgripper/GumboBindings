@@ -13,7 +13,7 @@ namespace UnitTestProject
         public static readonly string TestHtml = "<html><body class=\"gumbo\">boo!<span>Pillz here!</span><p id=\"tag123\"></p></body></html>";
 
         [TestMethod]
-        public void TestSelectSingleNodeAttribute()
+        public void YTestSelectSingleNodeAttribute()
         {
             using (GumboWrapper gumbo = new GumboWrapper(TestHtml))
             {
@@ -23,19 +23,6 @@ namespace UnitTestProject
                 Assert.AreEqual("class", node.Name);
                 Assert.AreEqual("class", node.LocalName);
             }
-        }
-
-        [TestMethod]
-        public void TestSelectSingleNodeAttribute_XLinq()
-        {
-            var document = System.Xml.Linq.XDocument.Parse(TestHtml);
-
-            var nav = document.CreateNavigator();
-            var node = nav.SelectSingleNode("/html/body/@class");
-            Assert.AreEqual("gumbo", node.Value);
-            Assert.AreEqual("class", node.Name);
-            Assert.AreEqual("class", node.LocalName);
-
         }
 
         [TestMethod]

@@ -48,12 +48,11 @@ namespace Gumbo.Wrappers
             Action<string, ElementWrapper> addElementWithId)
             : base(node, parent)
         {
-
             _Children = lazyFactory.Create<IEnumerable<NodeWrapper>>(() => 
             {
                 return node.GetChildren().Select(x => x is GumboElementNode
                 ? (NodeWrapper)new ElementWrapper((GumboElementNode)x, this, lazyFactory, addElementWithId)
-                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this)).ToList();
+                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this)).ToList().AsReadOnly();
             });
 
             _Attributes = lazyFactory.Create<IEnumerable<AttributeWrapper>>(() => 

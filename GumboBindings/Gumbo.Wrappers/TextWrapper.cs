@@ -20,7 +20,7 @@ namespace Gumbo.Wrappers
         {
             get 
             {
-                return Enumerable.Empty<NodeWrapper>();
+                return new List<NodeWrapper>().AsReadOnly();
             }
         }
 

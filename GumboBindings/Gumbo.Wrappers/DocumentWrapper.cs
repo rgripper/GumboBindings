@@ -10,7 +10,7 @@ namespace Gumbo.Wrappers
 {
     public class DocumentWrapper : NodeWrapper
     {
-        public ElementWrapper Root { get { return _Root.Value; } }
+        public ElementWrapper Root { get { return _Children.Value.FirstOrDefault(); } }
 
         public bool HasDocType { get; private set; }
 
@@ -26,20 +26,20 @@ namespace Gumbo.Wrappers
         {
             get 
             {
-                yield return Root;
+                return _Children.Value;
             }
         }
 
-        private readonly Lazy<ElementWrapper> _Root;
+        private readonly Lazy<IEnumerable<ElementWrapper>> _Children;
 
         internal DocumentWrapper(GumboDocumentNode node, DisposalAwareLazyFactory lazyFactory, 
             Action<string, ElementWrapper> addElementWithId)
             : base(node, null)
         {
-            _Root = lazyFactory.Create<ElementWrapper>(() =>
+            _Children = lazyFactory.Create<IEnumerable<ElementWrapper>>(() =>
             {
-                return new ElementWrapper((GumboElementNode)node.GetChildren().Single(), this,
-                    lazyFactory, addElementWithId);
+                return node.GetChildren().Select(x => new ElementWrapper((GumboElementNode)x, this,
+                    lazyFactory, addElementWithId)).ToList().AsReadOnly();
             });
 
             HasDocType = node.document.has_doctype;

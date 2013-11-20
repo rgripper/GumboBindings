@@ -31,18 +31,6 @@ namespace Gumbo.Wrappers
         private readonly Dictionary<string, List<ElementWrapper>> ElementsWithIds = 
             new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
 
-        public static List<Tuple<string, TimeSpan>> Values = new List<Tuple<string, TimeSpan>>();
-
-        public static Tuple<string, System.Diagnostics.Stopwatch> StartLog(string text)
-        {
-            return Tuple.Create(text, System.Diagnostics.Stopwatch.StartNew());
-        }
-
-        public static void EndLog(Tuple<string, System.Diagnostics.Stopwatch> startState)
-        {
-            Console.WriteLine("{0} {1}", startState.Item2.Elapsed, startState.Item1);
-        }
-
         public GumboWrapper(string html, bool stopOnFirstError = false, int maxErrors = -1, int tabStopSize = 8)
         {
             _Options = new GumboOptions();
@@ -134,7 +122,7 @@ namespace Gumbo.Wrappers
 
         private static void MarshalElementAndDescendants(ElementWrapper element)
         {
-            element.Attributes.Any();
+            GC.KeepAlive(element.Attributes);
             foreach (var child in element.Children.OfType<ElementWrapper>())
             {
                 MarshalElementAndDescendants(child);
