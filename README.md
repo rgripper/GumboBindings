@@ -2,6 +2,9 @@ C# bindings for Gumbo - a pure-C HTML5 parser
 =============
 
 [Gumbo parser](https://github.com/google/gumbo-parser) bindings using P/Invokes and marshalling.
+
+You can get it via Nuget (https://www.nuget.org/packages/Gumbo.Wrappers/).
+
 Types member names are preserved the way they appear in the original code to make API change tracking easier.
 To simplify usage there are wrappers for the main classes.
 
