@@ -101,7 +101,7 @@ namespace Gumbo.Bindings
         public IntPtr document;
 
         /// <summary>
-        /// Pointer to the root node.  This the <html> tag that forms the root of the
+        /// Pointer to the root node.  This the &lt;html&gt; tag that forms the root of the
         /// document.
         /// </summary>
         public IntPtr root;
@@ -560,7 +560,7 @@ namespace Gumbo.Bindings
     {
         /// <summary>
         /// An array of GumboNodes, containing the children of this element.  This will
-        /// normally consist of the <html> element and any comment nodes found.
+        /// normally consist of the &ltg;html&gt; element and any comment nodes found.
         /// Pointers are owned.
         /// </summary>
         public GumboVector children;
@@ -731,7 +731,7 @@ namespace Gumbo.Bindings
 
     public partial class NativeMethods
     {
-        private const string LibraryName = "gumbo.dll";
+        private const string LibraryName = "lib/gumbo.dll";
 
         /// <summary>
         /// Extracts the tag name from the original_text field of an element or token by
@@ -790,12 +790,9 @@ namespace Gumbo.Bindings
         public static extern void gumbo_destroy_output(ref GumboOptions options, IntPtr output);
 
         /// <summary>
-        /// Create options for method <see cref="gumbo_parse_with_options"/>.
+        /// Fills <paramref name="options"/> with default values defined in Gumbo library.
         /// </summary>
-        /// <param name="tab_stop">The tab-stop size, for computing positions in source code that uses tabs.</param>
-        /// <param name="stop_on_first_error"></param>
-        /// <param name="max_errors"></param>
-        /// <returns></returns>
+        /// <param name="options"></param>
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void gumbo_set_options_defaults(ref GumboOptions options);
     }

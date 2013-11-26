@@ -20,7 +20,7 @@ namespace Gumbo.Wrappers
         /// <summary>
         /// Allocates pointer and puts null terminated UTF-8 string bytes.
         /// </summary>
-        /// <param name="managedString"></param>
+        /// <param name="value">Original managed string</param>
         /// <returns></returns>
         public static IntPtr NativeUtf8FromString(string value) 
         {

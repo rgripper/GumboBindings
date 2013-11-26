@@ -13,7 +13,7 @@ namespace UnitTestProject
         public static readonly string TestHtml = "<html><body class=\"gumbo\">boo!<span>Pillz here!</span><p id=\"tag123\"></p></body></html>";
 
         [TestMethod]
-        public void YTestSelectSingleNodeAttribute()
+        public void TestSelectSingleNodeAttribute()
         {
             using (GumboWrapper gumbo = new GumboWrapper(TestHtml))
             {
