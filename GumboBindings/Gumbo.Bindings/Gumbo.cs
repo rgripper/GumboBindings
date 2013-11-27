@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Gumbo.Bindings
@@ -729,9 +732,9 @@ namespace Gumbo.Bindings
         GUMBO_NAMESPACE_MATHML,
     }
 
-    public partial class NativeMethods
+    public static class NativeMethods
     {
-        private const string LibraryName = "lib/gumbo.dll";
+        private const string LibraryName = "gumbo.dll";
 
         /// <summary>
         /// Extracts the tag name from the original_text field of an element or token by
@@ -795,5 +798,35 @@ namespace Gumbo.Bindings
         /// <param name="options"></param>
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void gumbo_set_options_defaults(ref GumboOptions options);
+
+        /// <summary>
+        /// Extracts embedded library and saves it in the current application directory.
+        /// Owerwrites existing file with the same name.
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="scopeType"></param>
+        /// <param name="dllName"></param>
+        private static void ExtractEmbeddedLibrary(Assembly assembly, Type scopeType, string dllName)
+        {
+            string[] resources = assembly.GetManifestResourceNames();
+            string fullResourceName = scopeType.Namespace + "." + dllName;
+
+            string actualResourceName = resources.SingleOrDefault(x => String.Equals(x, fullResourceName, StringComparison.OrdinalIgnoreCase));
+            if (actualResourceName == null)
+            {
+                throw new Exception(String.Format("Could not find resource with full name '{0}'", fullResourceName));
+            }
+
+            using (Stream resourceStream = assembly.GetManifestResourceStream(actualResourceName))
+            using (Stream fileStream = File.Create(dllName))
+            {
+                resourceStream.CopyTo(fileStream);
+            }
+        }
+
+        static NativeMethods()
+        {
+            ExtractEmbeddedLibrary(Assembly.GetExecutingAssembly(), typeof(NativeMethods), LibraryName);
+        }
     }
 }
