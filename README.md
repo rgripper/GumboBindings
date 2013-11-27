@@ -13,7 +13,7 @@ To simplify usage there are wrappers for the main classes.
     string testHtml = "<html><body class=\"gumbo\">Boo!</body></html>";
     using (GumboWrapper gumbo = new GumboWrapper(testHtml))
     {
-        Console.WriteLine(gumbo.Document.Root.Elements().ElementAt(1).Children.OfType<TextWrapper>().First().Text); // Boo!
+        Console.WriteLine(gumbo.Document.Root.Children.OfType<ElementWrapper>().ElementAt(1).Children.OfType<TextWrapper>().First().Text); // Boo!
         Console.WriteLine(gumbo.ToXDocument()); // to XDocument
     }
     Console.ReadLine();
