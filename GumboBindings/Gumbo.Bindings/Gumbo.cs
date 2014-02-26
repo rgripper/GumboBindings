@@ -671,7 +671,7 @@ namespace Gumbo.Bindings
     /// <summary>
     /// Attribute namespaces.
     /// HTML includes special handling for XLink, XML, and XMLNS namespaces on
-    /// attributes.  Everything else goes in the generatic "NONE" namespace.
+    /// attributes.  Everything else goes in the generic "NONE" namespace.
     /// </summary>
     public enum GumboAttributeNamespaceEnum
     {
