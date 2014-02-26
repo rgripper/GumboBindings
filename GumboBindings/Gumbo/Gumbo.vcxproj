@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Gumbo.DefGen\bin\Debug\Gumbo.def" />
+    <None Include="..\Gumbo.DefGen\bin\Release\Gumbo.def" />
     <None Include="Gumbo.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

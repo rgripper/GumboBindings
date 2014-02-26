@@ -106,5 +106,8 @@
     <None Include="..\Gumbo.DefGen\bin\Debug\Gumbo.def">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\Gumbo.DefGen\bin\Release\Gumbo.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
