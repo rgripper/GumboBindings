@@ -57,16 +57,6 @@
     <Compile Include="GumboWrapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Gumbo.Bindings\Gumbo.Bindings.csproj">
-      <Project>{c058bee4-66d8-47d5-aacd-b1c1920f6881}</Project>
-      <Name>Gumbo.Bindings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gumbo.Wrappers\Gumbo.Wrappers.csproj">
-      <Project>{a3a35981-f371-4ccb-9e54-72edbacc71f2}</Project>
-      <Name>Gumbo.Wrappers</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

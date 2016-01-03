@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gumbo.Wrappers
 {
@@ -16,12 +12,12 @@ namespace Gumbo.Wrappers
         {
             if (isDisposed == null)
             {
-                throw new ArgumentNullException("isDisposed");
+                throw new ArgumentNullException(nameof(isDisposed));
             }
 
             if (objectName == null)
             {
-                throw new ArgumentNullException("objectName");
+                throw new ArgumentNullException(nameof(objectName));
             }
 
             _IsDisposed = isDisposed;

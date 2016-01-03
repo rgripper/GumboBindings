@@ -1,11 +1,6 @@
 ﻿using Gumbo.Bindings;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gumbo.Wrappers
 {
@@ -39,12 +34,12 @@ namespace Gumbo.Wrappers
         {
             if (parent == null)
             {
-                throw new ArgumentNullException("parent");
+                throw new ArgumentNullException(nameof(parent));
             }
 
             if (addElementWithId == null)
             {
-                throw new ArgumentNullException("addElementWithId");
+                throw new ArgumentNullException(nameof(addElementWithId));
             }
 
             Parent = parent;

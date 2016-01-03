@@ -3,20 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gumbo.Wrappers
 {
     [DebuggerDisplay("Type = {Type}, Tag = {Tag}")]
     public class ElementWrapper : NodeWrapper
     {
-        public override IEnumerable<NodeWrapper> Children { get { return _Children.Value; } }
+        public override IEnumerable<NodeWrapper> Children => _Children.Value;
 
-        public IEnumerable<AttributeWrapper> Attributes { get { return _Attributes.Value; } }
+        public IEnumerable<AttributeWrapper> Attributes => _Attributes.Value;
 
-        public string Value { get { return _Value.Value; } }
+        public string Value => _Value.Value;
 
         public GumboTag Tag { get; private set; }
 
@@ -61,9 +58,9 @@ namespace Gumbo.Wrappers
                     new AttributeWrapper(x, this, i, addElementWithId)).ToList();
             });
 
-            _Value = lazyFactory.Create<string>(() =>
+            _Value = lazyFactory.Create(() =>
             {
-                return String.Concat(this.Children.Select(x => x is ElementWrapper
+                return string.Concat(this.Children.Select(x => x is ElementWrapper
                     ? ((ElementWrapper)x).Value
                     : ((TextWrapper)x).Text));
             });

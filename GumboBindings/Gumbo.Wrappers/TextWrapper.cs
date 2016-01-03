@@ -12,17 +12,11 @@ namespace Gumbo.Wrappers
     [DebuggerDisplay("Type = {Type}, Text = {Text}")]
     public class TextWrapper : NodeWrapper
     {
-        public string Text { get; internal set; }
+        public string Text { get; private set; }
 
-        public GumboSourcePosition StartPosition { get; internal set; }
+        public GumboSourcePosition StartPosition { get; private set; }
 
-        public override IEnumerable<NodeWrapper> Children
-        {
-            get 
-            {
-                return new List<NodeWrapper>().AsReadOnly();
-            }
-        }
+        public override IEnumerable<NodeWrapper> Children => new List<NodeWrapper>().AsReadOnly();
 
         internal TextWrapper(GumboTextNode node, NodeWrapper parent)
             : base(node, parent)

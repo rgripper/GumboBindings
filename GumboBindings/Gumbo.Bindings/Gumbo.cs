@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Gumbo.Bindings
 {
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public class GumboNode
     {
         public GumboNodeType type;
@@ -26,19 +26,19 @@ namespace Gumbo.Bindings
         public GumboParseFlags parse_flags;
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public class GumboElementNode : GumboNode
     {
         public GumboElement element;
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public class GumboDocumentNode : GumboNode
     {
         public GumboDocument document;
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public class GumboTextNode : GumboNode
     {
         public GumboText text;
@@ -50,7 +50,7 @@ namespace Gumbo.Bindings
     /// handling, etc.
     /// Use kGumboDefaultOptions for sensible defaults, and only set what you need.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboOptions
     {
         /// <summary>
@@ -89,12 +89,34 @@ namespace Gumbo.Bindings
         /// Default: -1
         /// </summary>
         public int max_errors;
+
+        /// <summary>
+        /// The fragment context for parsing:
+        /// https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
+        ///
+        /// If GUMBO_TAG_LAST is passed here, it is assumed to be "no fragment", i.e.
+        /// the regular parsing algorithm.  Otherwise, pass the tag enum for the
+        /// intended parent of the parsed fragment.  We use just the tag enum rather
+        /// than a full node because that's enough to set all the parsing context we
+        /// need, and it provides some additional flexibility for client code to act as
+        /// if parsing a fragment even when a full HTML tree isn't available.
+        /// Default: GUMBO_TAG_LAST 
+        /// </summary>
+        public GumboTag fragment_context;
+
+        /// <summary>
+        /// The namespace for the fragment context.  This lets client code
+        /// differentiate between, say, parsing a &lt;title&gt; tag in SVG vs. parsing it in
+        /// HTML.
+        /// Default: GUMBO_NAMESPACE_HTML
+        /// </summary>
+        public GumboNamespaceEnum fragment_namespace;
     }
 
     /// <summary>
     /// The output struct containing the results of the parse.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public class GumboOutput
     {
         /// <summary>
@@ -121,20 +143,44 @@ namespace Gumbo.Bindings
 
     public enum GumboNodeType
     {
+        /// <summary>
+        /// Document node.  v will be a GumboDocument.
+        /// </summary>
         GUMBO_NODE_DOCUMENT,
 
+        /// <summary>
+        /// Element node.  v will be a GumboElement.
+        /// </summary>
         GUMBO_NODE_ELEMENT,
 
+        /// <summary>
+        /// Text node.  v will be a GumboText.
+        /// </summary>
         GUMBO_NODE_TEXT,
 
+        /// <summary>
+        /// CDATA node. v will be a GumboText.
+        /// </summary>
         GUMBO_NODE_CDATA,
 
+        /// <summary>
+        /// Comment node.  v will be a GumboText, excluding comment delimiters.
+        /// </summary>
         GUMBO_NODE_COMMENT,
 
         /// <summary>
-        /// Text node, where all contents is whitespace.
+        /// Text node, where all contents is whitespace.  v will be a GumboText.
         /// </summary>
         GUMBO_NODE_WHITESPACE,
+
+        /// <summary>
+        /// Template node.  This is separate from GUMBO_NODE_ELEMENT because many
+        /// client libraries will want to ignore the contents of template nodes, as
+        /// the spec suggests.  Recursing on GUMBO_NODE_ELEMENT will do the right thing
+        /// here, while clients that want to include template contents should also
+        /// check for GUMBO_NODE_TEMPLATE.  v will be a GumboElement. 
+        /// </summary>
+        GUMBO_NODE_TEMPLATE
     }
 
     /// <summary>
@@ -232,7 +278,7 @@ namespace Gumbo.Bindings
     /// library.  Iteration can be done through inspecting the structure directly in
     /// a for-loop.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboVector
     {
         /// <summary>
@@ -267,31 +313,16 @@ namespace Gumbo.Bindings
     /// </remarks>
     public enum GumboTag
     {
-        /// <summary>
-        ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-root-element
-        /// </summary>
         GUMBO_TAG_HTML,
-
-        /// <summary>
-        ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#document-metadata
-        /// </summary>
         GUMBO_TAG_HEAD,
         GUMBO_TAG_TITLE,
         GUMBO_TAG_BASE,
         GUMBO_TAG_LINK,
         GUMBO_TAG_META,
         GUMBO_TAG_STYLE,
-
-        /// <summary>
-        ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#scripting-1
-        /// </summary>
         GUMBO_TAG_SCRIPT,
         GUMBO_TAG_NOSCRIPT,
         GUMBO_TAG_TEMPLATE,
-
-        /// <summary>
-        ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/sections.html#sections
-        /// </summary>
         GUMBO_TAG_BODY,
         GUMBO_TAG_ARTICLE,
         GUMBO_TAG_SECTION,
@@ -307,10 +338,6 @@ namespace Gumbo.Bindings
         GUMBO_TAG_HEADER,
         GUMBO_TAG_FOOTER,
         GUMBO_TAG_ADDRESS,
-
-        /// <summary>
-        ///  http://www.whatwg.org/specs/web-apps/current-work/multipage/grouping-content.html#grouping-content
-        /// </summary>
         GUMBO_TAG_P,
         GUMBO_TAG_HR,
         GUMBO_TAG_PRE,
@@ -325,10 +352,6 @@ namespace Gumbo.Bindings
         GUMBO_TAG_FIGCAPTION,
         GUMBO_TAG_MAIN,
         GUMBO_TAG_DIV,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#text-level-semantics
-        /// </summary>
         GUMBO_TAG_A,
         GUMBO_TAG_EM,
         GUMBO_TAG_STRONG,
@@ -358,16 +381,8 @@ namespace Gumbo.Bindings
         GUMBO_TAG_SPAN,
         GUMBO_TAG_BR,
         GUMBO_TAG_WBR,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/edits.html#edits
-        /// </summary>
         GUMBO_TAG_INS,
         GUMBO_TAG_DEL,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1
-        /// </summary>
         GUMBO_TAG_IMAGE,
         GUMBO_TAG_IMG,
         GUMBO_TAG_IFRAME,
@@ -381,10 +396,6 @@ namespace Gumbo.Bindings
         GUMBO_TAG_CANVAS,
         GUMBO_TAG_MAP,
         GUMBO_TAG_AREA,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#mathml
-        /// </summary>
         GUMBO_TAG_MATH,
         GUMBO_TAG_MI,
         GUMBO_TAG_MO,
@@ -394,18 +405,9 @@ namespace Gumbo.Bindings
         GUMBO_TAG_MGLYPH,
         GUMBO_TAG_MALIGNMARK,
         GUMBO_TAG_ANNOTATION_XML,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#svg-0
-        /// </summary>
         GUMBO_TAG_SVG,
         GUMBO_TAG_FOREIGNOBJECT,
         GUMBO_TAG_DESC,
-
-        /// <summary>
-        /// SVG title tags will have GUMBO_TAG_TITLE as with HTML.
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#tabular-data
-        /// </summary>
         GUMBO_TAG_TABLE,
         GUMBO_TAG_CAPTION,
         GUMBO_TAG_COLGROUP,
@@ -416,10 +418,6 @@ namespace Gumbo.Bindings
         GUMBO_TAG_TR,
         GUMBO_TAG_TD,
         GUMBO_TAG_TH,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms
-        /// </summary>
         GUMBO_TAG_FORM,
         GUMBO_TAG_FIELDSET,
         GUMBO_TAG_LEGEND,
@@ -435,19 +433,10 @@ namespace Gumbo.Bindings
         GUMBO_TAG_OUTPUT,
         GUMBO_TAG_PROGRESS,
         GUMBO_TAG_METER,
-
-        /// <summary>
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#interactive-elements
-        /// </summary>
         GUMBO_TAG_DETAILS,
         GUMBO_TAG_SUMMARY,
         GUMBO_TAG_MENU,
         GUMBO_TAG_MENUITEM,
-
-        /// <summary>
-        /// Non-conforming elements that nonetheless appear in the HTML5 spec.
-        /// http://www.whatwg.org/specs/web-apps/current-work/multipage/obsolete.html#non-conforming-features
-        /// </summary>
         GUMBO_TAG_APPLET,
         GUMBO_TAG_ACRONYM,
         GUMBO_TAG_BGSOUND,
@@ -473,9 +462,11 @@ namespace Gumbo.Bindings
         GUMBO_TAG_NOBR,
         GUMBO_TAG_SPACER,
         GUMBO_TAG_TT,
+        GUMBO_TAG_RTC,
 
         /// <summary>
-        /// Used for all tags that don't have special handling in HTML.
+        /// Used for all tags that don't have special handling in HTML.  Add new tags
+        /// to the end of tag.in so as to preserve backwards-compatibility.
         /// </summary>
         GUMBO_TAG_UNKNOWN,
 
@@ -491,7 +482,7 @@ namespace Gumbo.Bindings
     /// name-value pair, but also includes information about source locations and
     /// original source text.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboAttribute
     {
         /// <summary>
@@ -558,7 +549,7 @@ namespace Gumbo.Bindings
     /// <summary>
     /// Information specific to document nodes.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboDocument
     {
         /// <summary>
@@ -600,7 +591,7 @@ namespace Gumbo.Bindings
     /// The struct used to represent all HTML elements.  This contains information
     /// about the tag, attributes, and child nodes.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboElement
     {
         /// <summary>
@@ -646,7 +637,7 @@ namespace Gumbo.Bindings
     /// The struct used to represent TEXT, CDATA, COMMENT, and WHITESPACE elements.
     /// This contains just a block of text and its position.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboText
     {
         /// <summary>
@@ -694,7 +685,7 @@ namespace Gumbo.Bindings
     /// buffer of bytes), while the column field is often used to reference a
     /// particular column on a printable display, which nowadays is usually UTF-8.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GumboSourcePosition
     {
         public uint line;
@@ -795,38 +786,13 @@ namespace Gumbo.Bindings
         /// <summary>
         /// Fills <paramref name="options"/> with default values defined in Gumbo library.
         /// </summary>
+        /// <remarks>
+        /// This is a custom function attached to the source code. 
+        /// It allows accessing const struct kGumboDefaultOptions without resorting to GetProcAddress
+        /// </remarks>
         /// <param name="options"></param>
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void gumbo_set_options_defaults(ref GumboOptions options);
+        public static extern GumboOptions gumbo_get_default_options();
 
-        /// <summary>
-        /// Extracts embedded library and saves it in the current application directory.
-        /// Owerwrites existing file with the same name.
-        /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="scopeType"></param>
-        /// <param name="dllName"></param>
-        private static void ExtractEmbeddedLibrary(Assembly assembly, Type scopeType, string dllName)
-        {
-            string[] resources = assembly.GetManifestResourceNames();
-            string fullResourceName = scopeType.Namespace + "." + dllName;
-
-            string actualResourceName = resources.SingleOrDefault(x => String.Equals(x, fullResourceName, StringComparison.OrdinalIgnoreCase));
-            if (actualResourceName == null)
-            {
-                throw new Exception(String.Format("Could not find resource with full name '{0}'", fullResourceName));
-            }
-
-            using (Stream resourceStream = assembly.GetManifestResourceStream(actualResourceName))
-            using (Stream fileStream = File.Create(dllName))
-            {
-                resourceStream.CopyTo(fileStream);
-            }
-        }
-
-        static NativeMethods()
-        {
-            ExtractEmbeddedLibrary(Assembly.GetExecutingAssembly(), typeof(NativeMethods), LibraryName);
-        }
     }
 }

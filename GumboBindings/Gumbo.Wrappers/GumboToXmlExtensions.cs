@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Gumbo.Wrappers;
 using Gumbo.Bindings;
 
 namespace Gumbo.Wrappers
 {
-    public enum NodeFilterMode
-    {
-        RemoveUnfitNodes,
-        RemoveUnfitNodesAndPromoteChildren
-    }
-
     public static class GumboToXmlExtensions
     {
         public static XDocument ToXDocument(this GumboDocumentNode docNode)
@@ -31,11 +20,12 @@ namespace Gumbo.Wrappers
                     var docNode = (GumboDocumentNode)node;
                     return new XDocument(docNode.GetChildren().Select(x => CreateXNode(x)));
                 case GumboNodeType.GUMBO_NODE_ELEMENT:
+                case GumboNodeType.GUMBO_NODE_TEMPLATE:
                     var elementNode = (GumboElementNode)node;
                     string elementName = GetName(elementNode.element.tag);
                     var attributes = elementNode.GetAttributes().Select(x => new XAttribute(
-                            NativeUtf8Helper.StringFromNativeUtf8(x.name),
-                            NativeUtf8Helper.StringFromNativeUtf8(x.value)));
+                        NativeUtf8Helper.StringFromNativeUtf8(x.name),
+                        NativeUtf8Helper.StringFromNativeUtf8(x.value)));
                     var children = elementNode.GetChildren().Select(x => CreateXNode(x));
                     return new XElement(elementName, attributes, children);
                 case GumboNodeType.GUMBO_NODE_TEXT:
@@ -51,13 +41,13 @@ namespace Gumbo.Wrappers
                     var spaceNode = (GumboTextNode)node;
                     return new XText(NativeUtf8Helper.StringFromNativeUtf8(spaceNode.text.text));
                 default:
-                    throw new NotSupportedException(String.Format("Unknown node type '{0}'", (int)node.type));
+                    throw new NotSupportedException(string.Format("Unknown node type '{0}'", (int)node.type));
             }
         }
 
         private static string GetName(GumboTag tag)
         {
-            return tag.ToString().Substring("GUMBO_TAG_".Length).ToLower();
+            return tag.ToString().Substring("GUMBO_TAG_".Length).ToLower().Replace('_', '-');
         }
     }
 }

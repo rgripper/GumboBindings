@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Gumbo.Wrappers
 {
@@ -28,17 +25,17 @@ namespace Gumbo.Wrappers
 
         public static IEnumerable<GumboAttribute> GetAttributes(this GumboElementNode node)
         {
-            return MarshalToPtrArray(node.element.attributes).Select(MarshalTo<GumboAttribute>);
+            return MarshalToPtrArray(node.element.attributes).Select(Marshal.PtrToStructure<GumboAttribute>);
         }
 
         public static GumboDocumentNode GetDocument(this GumboOutput output)
         {
-            return MarshalTo<GumboDocumentNode>(output.document);
+            return Marshal.PtrToStructure<GumboDocumentNode>(output.document);
         }
 
         public static GumboElementNode GetRoot(this GumboOutput output)
         {
-            return MarshalTo<GumboElementNode>(output.root);
+            return Marshal.PtrToStructure<GumboElementNode>(output.root);
         }
 
         public static IEnumerable<GumboErrorContainer> GetErrors(this GumboOutput output)
@@ -48,24 +45,24 @@ namespace Gumbo.Wrappers
 
         private static GumboErrorContainer MarshalToSpecificErrorContainer(IntPtr errorPointer)
         {
-            var error = MarshalTo<GumboErrorContainer>(errorPointer);
+            var error = Marshal.PtrToStructure<GumboErrorContainer>(errorPointer);
             switch (error.type)
             {
                 case GumboErrorType.GUMBO_ERR_UTF8_INVALID:
                 case GumboErrorType.GUMBO_ERR_UTF8_TRUNCATED:
                 case GumboErrorType.GUMBO_ERR_NUMERIC_CHAR_REF_WITHOUT_SEMICOLON:
                 case GumboErrorType.GUMBO_ERR_NUMERIC_CHAR_REF_INVALID:
-                    return MarshalTo<GumboCodepointErrorContainer>(errorPointer);
+                    return Marshal.PtrToStructure<GumboCodepointErrorContainer>(errorPointer);
                 case GumboErrorType.GUMBO_ERR_NAMED_CHAR_REF_WITHOUT_SEMICOLON:
                 case GumboErrorType.GUMBO_ERR_NAMED_CHAR_REF_INVALID:
-                    return MarshalTo<GumboNamedCharErrorContainer>(errorPointer);
+                    return Marshal.PtrToStructure<GumboNamedCharErrorContainer>(errorPointer);
                 case GumboErrorType.GUMBO_ERR_DUPLICATE_ATTR:
-                    return MarshalTo<GumboDuplicateAttrErrorContainer>(errorPointer);
+                    return Marshal.PtrToStructure<GumboDuplicateAttrErrorContainer>(errorPointer);
                 case GumboErrorType.GUMBO_ERR_PARSER:
                 case GumboErrorType.GUMBO_ERR_UNACKNOWLEDGED_SELF_CLOSING_TAG:
-                    return MarshalTo<GumboParserErrorContainer>(errorPointer);
+                    return Marshal.PtrToStructure<GumboParserErrorContainer>(errorPointer);
                 default:
-                    return MarshalTo<GumboTokenizerErrorContainer>(errorPointer);
+                    return Marshal.PtrToStructure<GumboTokenizerErrorContainer>(errorPointer);
             }
 
         }
@@ -77,26 +74,21 @@ namespace Gumbo.Wrappers
         /// <returns></returns>
         private static GumboNode MarshalToSpecificNode(IntPtr nodePointer)
         {
-            GumboNode node = (GumboNode)Marshal.PtrToStructure(nodePointer, typeof(GumboNode));
+            GumboNode node = Marshal.PtrToStructure<GumboNode>(nodePointer);
             switch (node.type)
             {
                 case GumboNodeType.GUMBO_NODE_DOCUMENT:
-                    return MarshalTo<GumboDocumentNode>(nodePointer);
+                    return Marshal.PtrToStructure<GumboDocumentNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_ELEMENT:
-                    return MarshalTo<GumboElementNode>(nodePointer);
+                    return Marshal.PtrToStructure<GumboElementNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_TEXT:
                 case GumboNodeType.GUMBO_NODE_CDATA:
                 case GumboNodeType.GUMBO_NODE_COMMENT:
                 case GumboNodeType.GUMBO_NODE_WHITESPACE:
-                    return MarshalTo<GumboTextNode>(nodePointer);
+                    return Marshal.PtrToStructure<GumboTextNode>(nodePointer);
                 default:
                     throw new NotSupportedException(String.Format("Unknown node type '{0}'", (int)node.type));
             }
-        }
-
-        private static T MarshalTo<T>(IntPtr pointer)
-        {
-            return (T)Marshal.PtrToStructure(pointer, typeof(T));
         }
 
         private static IntPtr[] MarshalToPtrArray(GumboVector vector)

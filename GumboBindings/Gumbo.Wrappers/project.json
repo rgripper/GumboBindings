@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0-*",
+  "description": "Gumbo.Wrappers Class Library",
+  "authors": [ "cgfqh" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+    "frameworks": {
+        "net452": {
+            "frameworkAssemblies": {
+                "System.XML": "4.0.0.0",
+                "System.Xml.Linq": "4.0.0.0"
+            }
+        },
+        "dotnet5.4": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-23516",
+                "System.Collections": "4.0.11-beta-23516",
+                "System.Linq": "4.0.1-beta-23516",
+                "System.Threading": "4.0.11-beta-23516",
+                "System.Xml.XDocument": "4.0.11-rc2-23525",
+                "System.Xml.XPath": "4.0.1-beta-23516",
+                "System.Runtime": "4.0.21-beta-23516"
+            }
+        }
+    },
+    "dependencies": {
+        "Gumbo.Bindings": "1.0.0-*"
+    }
+}

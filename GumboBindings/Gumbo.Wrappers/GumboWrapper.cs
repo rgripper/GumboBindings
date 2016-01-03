@@ -3,13 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Gumbo.Wrappers
 {
+    public struct GumboWrapperOptions
+    {
+        public bool StopOnFirstError { get; set; }
+
+        public int MaxErrors { get; set; }
+
+        public int TabStopSize { get; set; }
+
+        public GumboTag FragmentContext { get; set; }
+
+        public GumboNamespaceEnum FragmentNamespace { get; set; }
+    }
+
     public class GumboWrapper : IDisposable, IXPathNavigable
     {
         public DocumentWrapper Document { get; private set; }
@@ -31,21 +42,35 @@ namespace Gumbo.Wrappers
         private readonly Dictionary<string, List<ElementWrapper>> ElementsWithIds = 
             new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
 
-        public GumboWrapper(string html, bool stopOnFirstError = false, int maxErrors = -1, int tabStopSize = 8)
+        public GumboWrapper(string html, GumboWrapperOptions? options = null)
         {
-            _Options = new GumboOptions();
-            NativeMethods.gumbo_set_options_defaults(ref _Options);
-            _Options.max_errors = maxErrors;
-            _Options.stop_on_first_error = stopOnFirstError;
+            _Options = CreateOptions(options);
+
             _Html = NativeUtf8Helper.NativeUtf8FromString(html);
 
             _OutputPtr = NativeMethods.gumbo_parse(_Html);
-            var output = (GumboOutput)Marshal.PtrToStructure(_OutputPtr, typeof(GumboOutput));
+            var output = Marshal.PtrToStructure<GumboOutput>(_OutputPtr);
             _GumboDocumentNode = output.GetDocument();
             Errors = output.GetErrors();
 
             var lazyFactory = new DisposalAwareLazyFactory(() => this._Disposed, typeof(GumboWrapper).Name);
             Document = new DocumentWrapper(_GumboDocumentNode, lazyFactory, AddElementWithId);
+        }
+
+        private GumboOptions CreateOptions(GumboWrapperOptions? options)
+        {
+            var defaultOptionsCopy = NativeMethods.gumbo_get_default_options();
+
+            if (options != null)
+            {
+                defaultOptionsCopy.max_errors = options.Value.MaxErrors;
+                defaultOptionsCopy.stop_on_first_error = options.Value.StopOnFirstError;
+                defaultOptionsCopy.tab_stop = options.Value.TabStopSize;
+                defaultOptionsCopy.fragment_context = options.Value.FragmentContext;
+                defaultOptionsCopy.fragment_namespace = options.Value.FragmentNamespace;
+            }
+
+            return defaultOptionsCopy;
         }
 
         public XDocument ToXDocument()

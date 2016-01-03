@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Gumbo.Bindings;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.XPath;
 
 namespace Gumbo.Wrappers
@@ -19,7 +17,7 @@ namespace Gumbo.Wrappers
             {
                 if (attribute == null)
                 {
-                    throw new ArgumentNullException("attribute");
+                    throw new ArgumentNullException(nameof(attribute));
                 }
 
                 Attribute = attribute;
@@ -29,7 +27,7 @@ namespace Gumbo.Wrappers
             {
                 if (node == null)
                 {
-                    throw new ArgumentNullException("node");
+                    throw new ArgumentNullException(nameof(node));
                 }
 
                 Node = node;
@@ -39,7 +37,7 @@ namespace Gumbo.Wrappers
             {
                 if (attribute == null)
                 {
-                    throw new ArgumentNullException("attribute");
+                    throw new ArgumentNullException(nameof(attribute));
                 }
 
                 Node = null;
@@ -50,7 +48,7 @@ namespace Gumbo.Wrappers
             {
                 if (node == null)
                 {
-                    throw new ArgumentNullException("node");
+                    throw new ArgumentNullException(nameof(node));
                 }
 
                 Node = node;
@@ -306,16 +304,16 @@ namespace Gumbo.Wrappers
 
                 switch (_State.Node.Type)
                 {
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_DOCUMENT:
+                    case GumboNodeType.GUMBO_NODE_DOCUMENT:
                         return XPathNodeType.Root;
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_ELEMENT:
+                    case GumboNodeType.GUMBO_NODE_ELEMENT:
                         return XPathNodeType.Element;
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_TEXT:
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_CDATA:
+                    case GumboNodeType.GUMBO_NODE_TEXT:
+                    case GumboNodeType.GUMBO_NODE_CDATA:
                         return XPathNodeType.Text;
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_COMMENT:
+                    case GumboNodeType.GUMBO_NODE_COMMENT:
                         return XPathNodeType.Comment;
-                    case Gumbo.Bindings.GumboNodeType.GUMBO_NODE_WHITESPACE:
+                    case GumboNodeType.GUMBO_NODE_WHITESPACE:
                         return XPathNodeType.Whitespace;
                     default:
                         throw new NotImplementedException();
@@ -333,16 +331,16 @@ namespace Gumbo.Wrappers
                 {
                     switch (_State.Attribute.Namespace)
                     {
-                        case Gumbo.Bindings.GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_NONE:
+                        case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_NONE:
                             return String.Empty;
-                        case Gumbo.Bindings.GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XLINK:
+                        case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XLINK:
                             return "xlink";
-                        case Gumbo.Bindings.GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XML:
+                        case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XML:
                             return "xml";
-                        case Gumbo.Bindings.GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XMLNS:
+                        case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XMLNS:
                             return "xmlns";
                         default:
-                            throw new Exception();
+                            throw new NotSupportedException($"Namespace '{_State.Attribute.Namespace}' is not supported");
                     }
                 }
 

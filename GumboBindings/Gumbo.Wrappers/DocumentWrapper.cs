@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gumbo.Wrappers
 {
@@ -22,13 +19,7 @@ namespace Gumbo.Wrappers
 
         public GumboQuirksModeEnum DocTypeQuirksMode { get; private set; }
 
-        public override IEnumerable<NodeWrapper> Children
-        {
-            get 
-            {
-                return _Children.Value;
-            }
-        }
+        public override IEnumerable<NodeWrapper> Children => _Children.Value;
 
         private readonly Lazy<IEnumerable<ElementWrapper>> _Children;
 
