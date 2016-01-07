@@ -42,6 +42,8 @@ namespace Gumbo.Wrappers
         private readonly Dictionary<string, List<ElementWrapper>> ElementsWithIds = 
             new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
 
+        private readonly WrapperFactory _WrapperFactory;
+
         public GumboWrapper(string html, GumboWrapperOptions? options = null)
         {
             _Options = CreateOptions(options);
@@ -54,7 +56,8 @@ namespace Gumbo.Wrappers
             Errors = output.GetErrors();
 
             var lazyFactory = new DisposalAwareLazyFactory(() => this._Disposed, typeof(GumboWrapper).Name);
-            Document = new DocumentWrapper(_GumboDocumentNode, lazyFactory, AddElementWithId);
+            _WrapperFactory = new WrapperFactory(lazyFactory);
+            Document = (DocumentWrapper)_WrapperFactory.CreateNodeWrapper(_GumboDocumentNode);
         }
 
         private GumboOptions CreateOptions(GumboWrapperOptions? options)

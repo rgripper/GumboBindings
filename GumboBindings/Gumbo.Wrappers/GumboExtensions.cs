@@ -80,6 +80,7 @@ namespace Gumbo.Wrappers
                 case GumboNodeType.GUMBO_NODE_DOCUMENT:
                     return Marshal.PtrToStructure<GumboDocumentNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_ELEMENT:
+                case GumboNodeType.GUMBO_NODE_TEMPLATE:
                     return Marshal.PtrToStructure<GumboElementNode>(nodePointer);
                 case GumboNodeType.GUMBO_NODE_TEXT:
                 case GumboNodeType.GUMBO_NODE_CDATA:
@@ -87,7 +88,7 @@ namespace Gumbo.Wrappers
                 case GumboNodeType.GUMBO_NODE_WHITESPACE:
                     return Marshal.PtrToStructure<GumboTextNode>(nodePointer);
                 default:
-                    throw new NotSupportedException(String.Format("Unknown node type '{0}'", (int)node.type));
+                    throw new NotImplementedException($"Node type '{node.type}' is not implemented");
             }
         }
 

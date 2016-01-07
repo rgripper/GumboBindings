@@ -88,7 +88,7 @@ namespace Gumbo.Wrappers
             get
             {
                 return _State.Node != null 
-                    && _State.Node.Type == Bindings.GumboNodeType.GUMBO_NODE_ELEMENT
+                    && _State.Node.Type == GumboNodeType.GUMBO_NODE_ELEMENT
                     && !_State.Node.Children.Any();
             }
         }
@@ -116,7 +116,7 @@ namespace Gumbo.Wrappers
                 var element = _State.Node as ElementWrapper;
                 if (element != null)
                 {
-                    if (!String.IsNullOrEmpty(element.OriginalTagName))
+                    if (!string.IsNullOrEmpty(element.OriginalTagName))
                     {
                         return element.OriginalTagName.Split(':').Last();
                     }
@@ -126,7 +126,7 @@ namespace Gumbo.Wrappers
                     }
                 }
 
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -202,13 +202,14 @@ namespace Gumbo.Wrappers
                 return false;
             }
 
-            var nextNode = _State.Node.Parent.Children.ElementAtOrDefault(_State.Node.Index + 1);
-            if (nextNode == null)
+            var parent = _State.Node.Parent;
+            var nextIndex = parent.Children.IndexOf(_State.Node) + 1;
+            if (nextIndex >= parent.Children.Length)
             {
                 return false;
             }
 
-            _State.SetCurrent(nextNode);
+            _State.SetCurrent(parent.Children[nextIndex]);
             return true;
         }
 
@@ -219,13 +220,14 @@ namespace Gumbo.Wrappers
                 return false;
             }
 
-            var nextAttr = _State.Attribute.Parent.Attributes.ElementAtOrDefault(_State.Attribute.Index + 1);
-            if (nextAttr == null)
+            var parent = _State.Attribute.Parent;
+            var nextIndex = parent.Attributes.IndexOf(_State.Attribute) + 1;
+            if (nextIndex >= parent.Attributes.Length)
             {
                 return false;
             }
 
-            _State.SetCurrent(nextAttr);
+            _State.SetCurrent(parent.Attributes[nextIndex]);
             return true;
         }
 
@@ -252,13 +254,14 @@ namespace Gumbo.Wrappers
                 return false;
             }
 
-            var nextNode = _State.Node.Parent.Children.ElementAtOrDefault(_State.Node.Index - 1);
-            if (nextNode == null)
+            var parent = _State.Node.Parent;
+            var nextIndex = parent.Children.IndexOf(_State.Node) - 1;
+            if (nextIndex < 0)
             {
                 return false;
             }
 
-            _State.SetCurrent(nextNode);
+            _State.SetCurrent(parent.Children[nextIndex]);
             return true;
         }
 
@@ -277,7 +280,7 @@ namespace Gumbo.Wrappers
                     return element.OriginalTagName;
                 }
 
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -288,7 +291,7 @@ namespace Gumbo.Wrappers
 
         public override string NamespaceURI
         {
-            get { return String.Empty; }
+            get { return string.Empty; } // REVIEW
         }
 
         public override XPathNodeType NodeType
@@ -305,9 +308,12 @@ namespace Gumbo.Wrappers
                 switch (_State.Node.Type)
                 {
                     case GumboNodeType.GUMBO_NODE_DOCUMENT:
-                        return XPathNodeType.Root;
+                        throw new InvalidOperationException();
                     case GumboNodeType.GUMBO_NODE_ELEMENT:
-                        return XPathNodeType.Element;
+                    case GumboNodeType.GUMBO_NODE_TEMPLATE:
+                        return _State.Node.Parent.Type == GumboNodeType.GUMBO_NODE_DOCUMENT
+                            ? XPathNodeType.Root
+                            : XPathNodeType.Element;
                     case GumboNodeType.GUMBO_NODE_TEXT:
                     case GumboNodeType.GUMBO_NODE_CDATA:
                         return XPathNodeType.Text;
@@ -332,7 +338,7 @@ namespace Gumbo.Wrappers
                     switch (_State.Attribute.Namespace)
                     {
                         case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_NONE:
-                            return String.Empty;
+                            return string.Empty;
                         case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XLINK:
                             return "xlink";
                         case GumboAttributeNamespaceEnum.GUMBO_ATTR_NAMESPACE_XML:
@@ -363,7 +369,13 @@ namespace Gumbo.Wrappers
                     return element.Value;
                 }
 
-                return String.Empty;
+                var text = _State.Node as TextWrapper;
+                if (text != null)
+                {
+                    return text.Value;
+                }
+
+                return string.Empty;
             }
         }
 
@@ -379,7 +391,7 @@ namespace Gumbo.Wrappers
                 return new GumboNavigator(_Gumbo, _State.Attribute);
             }
 
-            throw new Exception();
+            throw new InvalidOperationException();
         }
 
     }

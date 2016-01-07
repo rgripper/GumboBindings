@@ -8,7 +8,13 @@
     "frameworks": {
         "net452": {
             "frameworkAssemblies": {
-                "System.XML": "4.0.0.0",
+                "System.Collections": "4.0.0.0",
+                "System.Globalization": "4.0.0.0",
+                "System.Resources.ResourceManager": "4.0.0.0",
+                "System.Runtime": "4.0.0.0",
+                "System.Runtime.Extensions": "4.0.0.0",
+                "System.Threading": "4.0.0.0",
+                "System.Xml": "4.0.0.0",
                 "System.Xml.Linq": "4.0.0.0"
             }
         },
@@ -17,14 +23,15 @@
                 "Microsoft.CSharp": "4.0.1-beta-23516",
                 "System.Collections": "4.0.11-beta-23516",
                 "System.Linq": "4.0.1-beta-23516",
+                "System.Runtime": "4.0.21-beta-23516",
                 "System.Threading": "4.0.11-beta-23516",
                 "System.Xml.XDocument": "4.0.11-rc2-23525",
-                "System.Xml.XPath": "4.0.1-beta-23516",
-                "System.Runtime": "4.0.21-beta-23516"
+                "System.Xml.XPath": "4.0.1-beta-23516"
             }
         }
     },
     "dependencies": {
-        "Gumbo.Bindings": "1.0.0-*"
+        "Gumbo.Bindings": "1.0.0-*",
+        "System.Collections.Immutable": "1.1.37"
     }
 }

@@ -1,13 +1,14 @@
 ﻿using Gumbo.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Gumbo.Wrappers
 {
     public class DocumentWrapper : NodeWrapper
     {
-        public ElementWrapper Root { get { return _Children.Value.FirstOrDefault(); } }
+        public ElementWrapper Root => (ElementWrapper)Children.FirstOrDefault();
 
         public bool HasDocType { get; private set; }
 
@@ -19,19 +20,15 @@ namespace Gumbo.Wrappers
 
         public GumboQuirksModeEnum DocTypeQuirksMode { get; private set; }
 
-        public override IEnumerable<NodeWrapper> Children => _Children.Value;
+        public override ImmutableArray<NodeWrapper> Children => _Children.Value;
 
-        private readonly Lazy<IEnumerable<ElementWrapper>> _Children;
+        private readonly Lazy<ImmutableArray<NodeWrapper>> _Children;
 
-        internal DocumentWrapper(GumboDocumentNode node, DisposalAwareLazyFactory lazyFactory, 
-            Action<string, ElementWrapper> addElementWithId)
+        internal DocumentWrapper(GumboDocumentNode node, WrapperFactory factory)
             : base(node, null)
         {
-            _Children = lazyFactory.Create<IEnumerable<ElementWrapper>>(() =>
-            {
-                return node.GetChildren().Select(x => new ElementWrapper((GumboElementNode)x, this,
-                    lazyFactory, addElementWithId)).ToList().AsReadOnly();
-            });
+            _Children = factory.CreateDisposalAwareLazy(() => 
+                ImmutableArray.CreateRange(node.GetChildren().OrderBy(x => x.index_within_parent).Select(x => factory.CreateNodeWrapper(x))));
 
             HasDocType = node.document.has_doctype;
             Name = NativeUtf8Helper.StringFromNativeUtf8(node.document.name);

@@ -1,6 +1,7 @@
 ﻿using Gumbo.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 
@@ -9,9 +10,9 @@ namespace Gumbo.Wrappers
     [DebuggerDisplay("Type = {Type}, Tag = {Tag}")]
     public class ElementWrapper : NodeWrapper
     {
-        public override IEnumerable<NodeWrapper> Children => _Children.Value;
+        public override ImmutableArray<NodeWrapper> Children => _Children.Value;
 
-        public IEnumerable<AttributeWrapper> Attributes => _Attributes.Value;
+        public ImmutableArray<AttributeWrapper> Attributes => _Attributes.Value;
 
         public string Value => _Value.Value;
 
@@ -35,35 +36,24 @@ namespace Gumbo.Wrappers
 
         public string OriginalEndTag { get; private set; }
 
-        private readonly Lazy<IEnumerable<NodeWrapper>> _Children;
+        private readonly Lazy<ImmutableArray<NodeWrapper>> _Children;
 
-        private readonly Lazy<IEnumerable<AttributeWrapper>> _Attributes;
+        private readonly Lazy<ImmutableArray<AttributeWrapper>> _Attributes;
 
         private readonly Lazy<string> _Value;
 
-        internal ElementWrapper(GumboElementNode node, NodeWrapper parent, DisposalAwareLazyFactory lazyFactory, 
-            Action<string, ElementWrapper> addElementWithId)
+        internal ElementWrapper(GumboElementNode node, NodeWrapper parent, WrapperFactory factory)
             : base(node, parent)
         {
-            _Children = lazyFactory.Create<IEnumerable<NodeWrapper>>(() => 
-            {
-                return node.GetChildren().Select(x => x is GumboElementNode
-                ? (NodeWrapper)new ElementWrapper((GumboElementNode)x, this, lazyFactory, addElementWithId)
-                : (NodeWrapper)new TextWrapper((GumboTextNode)x, this)).ToList().AsReadOnly();
-            });
+            _Children = factory.CreateDisposalAwareLazy(() =>
+                ImmutableArray.CreateRange(node.GetChildren().OrderBy(x => x.index_within_parent).Select(x => factory.CreateNodeWrapper(x, this))));
 
-            _Attributes = lazyFactory.Create<IEnumerable<AttributeWrapper>>(() => 
-            {
-                return node.GetAttributes().Select((x, i) => 
-                    new AttributeWrapper(x, this, i, addElementWithId)).ToList();
-            });
+            _Attributes = factory.CreateDisposalAwareLazy(() =>
+                ImmutableArray.CreateRange(node.GetAttributes().Select(x => factory.CreateAttributeWrapper(x, this))));
 
-            _Value = lazyFactory.Create(() =>
-            {
-                return string.Concat(this.Children.Select(x => x is ElementWrapper
+            _Value = factory.CreateDisposalAwareLazy(() => string.Concat(Children.Select(x => x is ElementWrapper
                     ? ((ElementWrapper)x).Value
-                    : ((TextWrapper)x).Text));
-            });
+                    : ((TextWrapper)x).Value)));
 
             StartPosition = node.element.start_pos;
             EndPosition = node.element.end_pos;

@@ -41,7 +41,7 @@ namespace Gumbo.Wrappers
                     var spaceNode = (GumboTextNode)node;
                     return new XText(NativeUtf8Helper.StringFromNativeUtf8(spaceNode.text.text));
                 default:
-                    throw new NotSupportedException(string.Format("Unknown node type '{0}'", (int)node.type));
+                    throw new NotImplementedException($"Node type '{node.type}' is not implemented");
             }
         }
 
