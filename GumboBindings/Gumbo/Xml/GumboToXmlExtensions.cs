@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using Gumbo.Bindings;
 
-namespace Gumbo.Wrappers
+namespace Gumbo.Xml
 {
     public static class GumboToXmlExtensions
     {

@@ -1,10 +1,9 @@
-﻿using Gumbo.Bindings;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Gumbo.Wrappers
+namespace Gumbo
 {
     public static class GumboExtensions
     {
@@ -68,7 +67,7 @@ namespace Gumbo.Wrappers
         }
 
         /// <summary>
-        /// Dealing with C unions, we need a two-step marshalling to get the actual instance.
+        /// Dealing with C unions, we need a two-step marshalling to get an actual instance.
         /// </summary>
         /// <param name="nodePointer"></param>
         /// <returns></returns>

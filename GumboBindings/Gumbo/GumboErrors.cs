@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Gumbo.Bindings
+namespace Gumbo
 {
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public class GumboErrorContainer

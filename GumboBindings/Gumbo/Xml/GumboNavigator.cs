@@ -1,11 +1,11 @@
-﻿using Gumbo.Bindings;
+﻿using Gumbo.Wrappers;
 using System;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace Gumbo.Wrappers
+namespace Gumbo.Xml
 {
-    class GumboNavigator : XPathNavigator
+    internal class GumboNavigator : XPathNavigator
     {
         private class NavigatorState : IEquatable<NavigatorState>
         {

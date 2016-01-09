@@ -1,4 +1,4 @@
-﻿using Gumbo.Bindings;
+﻿using Gumbo.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +21,15 @@ namespace Gumbo.Wrappers
         public GumboNamespaceEnum FragmentNamespace { get; set; }
     }
 
-    public class GumboWrapper : IDisposable, IXPathNavigable
+    public sealed class GumboWrapper : IDisposable, IXPathNavigable
     {
         public DocumentWrapper Document { get; private set; }
 
         public IEnumerable<GumboErrorContainer> Errors { get; private set; }
 
-        private bool _Disposed;
+        private bool _IsDisposed;
 
-        private bool _Marshalled;
+        private bool _IsMarshalled;
 
         private GumboOptions _Options;
 
@@ -44,6 +44,8 @@ namespace Gumbo.Wrappers
 
         private readonly WrapperFactory _WrapperFactory;
 
+        private readonly IUnmanagedLibrary _GumboLibrary = UnmanagedLibraryHelper.Create(NativeMethods.LibraryName);
+
         public GumboWrapper(string html, GumboWrapperOptions? options = null)
         {
             _Options = CreateOptions(options);
@@ -55,14 +57,14 @@ namespace Gumbo.Wrappers
             _GumboDocumentNode = output.GetDocument();
             Errors = output.GetErrors();
 
-            var lazyFactory = new DisposalAwareLazyFactory(() => this._Disposed, typeof(GumboWrapper).Name);
+            var lazyFactory = new DisposalAwareLazyFactory(() => _IsDisposed, typeof(GumboWrapper).Name);
             _WrapperFactory = new WrapperFactory(lazyFactory);
             Document = (DocumentWrapper)_WrapperFactory.CreateNodeWrapper(_GumboDocumentNode);
         }
 
         private GumboOptions CreateOptions(GumboWrapperOptions? options)
         {
-            var defaultOptionsCopy = NativeMethods.gumbo_get_default_options();
+            var defaultOptionsCopy = _GumboLibrary.MarshalStructure<GumboOptions>("kGumboDefaultOptions");
 
             if (options != null)
             {
@@ -106,14 +108,15 @@ namespace Gumbo.Wrappers
         /// </summary>
         public void Dispose()
         {
-            if (_Disposed)
+            if (_IsDisposed)
             {
                 return;
             }
 
             Marshal.FreeHGlobal(_Html);
             NativeMethods.gumbo_destroy_output(ref _Options, _OutputPtr);
-            _Disposed = true;
+            _GumboLibrary.Dispose();
+            _IsDisposed = true;
         }
 
         /// <summary>
@@ -121,19 +124,18 @@ namespace Gumbo.Wrappers
         /// </summary>
         public void MarshalAll()
         {
-            if (_Marshalled)
+            if (_IsMarshalled)
             {
                 return;
             }
 
             MarshalElementAndDescendants(this.Document.Root);
-            _Marshalled = true;
+            _IsMarshalled = true;
         }
 
         ~GumboWrapper()
         {
             Dispose();
-            GC.SuppressFinalize(this);
         }
 
         private void AddElementWithId(string id, ElementWrapper element)

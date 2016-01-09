@@ -1,4 +1,4 @@
-﻿using Gumbo.Bindings;
+﻿using Gumbo;
 using Gumbo.Wrappers;
 using System;
 using System.Linq;

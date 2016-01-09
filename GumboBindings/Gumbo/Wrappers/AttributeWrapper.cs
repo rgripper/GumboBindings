@@ -1,5 +1,4 @@
-﻿using Gumbo.Bindings;
-using System;
+﻿using System;
 using System.Diagnostics;
 
 namespace Gumbo.Wrappers

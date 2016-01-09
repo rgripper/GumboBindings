@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Gumbo.Bindings
+namespace Gumbo
 {
     [StructLayout(LayoutKind.Sequential)]
     public class GumboNode
@@ -725,7 +722,7 @@ namespace Gumbo.Bindings
 
     public static class NativeMethods
     {
-        private const string LibraryName = "gumbo.dll";
+        internal const string LibraryName = "gumbo.dll";
 
         /// <summary>
         /// Extracts the tag name from the original_text field of an element or token by
@@ -782,17 +779,6 @@ namespace Gumbo.Bindings
         /// <param name="output"></param>
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void gumbo_destroy_output(ref GumboOptions options, IntPtr output);
-
-        /// <summary>
-        /// Fills <paramref name="options"/> with default values defined in Gumbo library.
-        /// </summary>
-        /// <remarks>
-        /// This is a custom function attached to the source code. 
-        /// It allows accessing const struct kGumboDefaultOptions without resorting to GetProcAddress
-        /// </remarks>
-        /// <param name="options"></param>
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern GumboOptions gumbo_get_default_options();
 
     }
 }

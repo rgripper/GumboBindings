@@ -31,7 +31,7 @@
         }
     },
     "dependencies": {
-        "Gumbo.Bindings": "1.0.0-*",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc2-16237",
         "System.Collections.Immutable": "1.1.37"
     }
 }
