@@ -1,9 +1,11 @@
 C# bindings for Gumbo - a pure-C HTML5 parser
 =============
 
+### Note! Package was moved from `Gumbo.Wrappers` to `Gumbo.Bindings`. Please, readd the package.
+
 [Gumbo parser](https://github.com/google/gumbo-parser) bindings using P/Invokes and marshalling.
 
-You can get it via Nuget: `Install-Package Gumbo.Wrappers`
+You can get it via Nuget: `Install-Package Gumbo.Bindings`
 
 You will also need to place a native `gumbo.dll` along the wrapper library. You can either take one from this repo or compile yourself.
 
