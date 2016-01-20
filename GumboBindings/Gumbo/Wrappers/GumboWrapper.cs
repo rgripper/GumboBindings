@@ -39,9 +39,6 @@ namespace Gumbo.Wrappers
 
         private readonly IntPtr _Html;
 
-        private readonly Dictionary<string, List<ElementWrapper>> ElementsWithIds = 
-            new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
-
         private readonly WrapperFactory _WrapperFactory;
 
         private readonly IUnmanagedLibrary _GumboLibrary = UnmanagedLibraryHelper.Create(NativeMethods.LibraryName);
@@ -92,14 +89,7 @@ namespace Gumbo.Wrappers
         {
             MarshalAll();
 
-            List<ElementWrapper> elements;
-
-            if (ElementsWithIds.TryGetValue(id, out elements))
-            {
-                return elements.FirstOrDefault();
-            }
-
-            return null;
+            return _WrapperFactory.GetElementById(id);
         }
 
         /// <summary>
@@ -133,23 +123,6 @@ namespace Gumbo.Wrappers
             _IsMarshalled = true;
         }
 
-        ~GumboWrapper()
-        {
-            Dispose();
-        }
-
-        private void AddElementWithId(string id, ElementWrapper element)
-        {
-            List<ElementWrapper> elements;
-            if (!ElementsWithIds.TryGetValue(id, out elements))
-            {
-                elements = new List<ElementWrapper>();
-                ElementsWithIds.Add(id, elements);
-            }
-
-            elements.Add(element);
-        }
-
         private static void MarshalElementAndDescendants(ElementWrapper element)
         {
             GC.KeepAlive(element.Attributes);
@@ -157,6 +130,11 @@ namespace Gumbo.Wrappers
             {
                 MarshalElementAndDescendants(child);
             }
+        }
+
+        ~GumboWrapper()
+        {
+            Dispose();
         }
     }
 }

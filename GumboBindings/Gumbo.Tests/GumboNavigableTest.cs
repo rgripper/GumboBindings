@@ -15,6 +15,7 @@ namespace UnitTestProject
             {
                 var nav = gumbo.CreateNavigator();
                 var node = nav.SelectSingleNode("/html/body/@class");
+                Assert.NotNull(node);
                 Assert.Equal("gumbo", node.Value);
                 Assert.Equal("class", node.Name);
                 Assert.Equal("class", node.LocalName);
@@ -28,6 +29,7 @@ namespace UnitTestProject
             {
                 var nav = gumbo.CreateNavigator();
                 var node = nav.SelectSingleNode("/html/body/span");
+                Assert.NotNull(node);
                 Assert.Equal("Pillz here!", node.Value);
                 Assert.Equal("span", node.Name);
                 Assert.Equal("span", node.LocalName);

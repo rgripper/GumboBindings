@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.1.0-*",
   "description": "Gumbo.Wrappers Class Library",
-  "authors": [ "cgfqh" ],
+  "authors": [ "Vladimir Zotov" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",

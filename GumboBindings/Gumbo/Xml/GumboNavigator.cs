@@ -308,12 +308,10 @@ namespace Gumbo.Xml
                 switch (_State.Node.Type)
                 {
                     case GumboNodeType.GUMBO_NODE_DOCUMENT:
-                        throw new InvalidOperationException();
+                        return XPathNodeType.Root;
                     case GumboNodeType.GUMBO_NODE_ELEMENT:
                     case GumboNodeType.GUMBO_NODE_TEMPLATE:
-                        return _State.Node.Parent.Type == GumboNodeType.GUMBO_NODE_DOCUMENT
-                            ? XPathNodeType.Root
-                            : XPathNodeType.Element;
+                        return XPathNodeType.Element;
                     case GumboNodeType.GUMBO_NODE_TEXT:
                     case GumboNodeType.GUMBO_NODE_CDATA:
                         return XPathNodeType.Text;

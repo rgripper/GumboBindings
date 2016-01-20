@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Gumbo.Wrappers
@@ -7,8 +8,10 @@ namespace Gumbo.Wrappers
     {
         private readonly DisposalAwareLazyFactory _LazyFactory;
 
-        public Dictionary<string, List<ElementWrapper>> MarshalledElementsByIds =>
+        private readonly Dictionary<string, List<ElementWrapper>> MarshalledElementsByIds =
             new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
+
+        private bool _IsMarshalled;
 
         public WrapperFactory(DisposalAwareLazyFactory lazyFactory)
         {
@@ -39,7 +42,7 @@ namespace Gumbo.Wrappers
             var attributeWrapper = new AttributeWrapper(attribute, parent);
             if (string.Equals(attributeWrapper.Name, "id", StringComparison.OrdinalIgnoreCase))
             {
-                AddElementWithId(attributeWrapper.Value, parent);
+                AddElementById(attributeWrapper.Value, parent);
             }
             return attributeWrapper;
         }
@@ -49,7 +52,19 @@ namespace Gumbo.Wrappers
             return _LazyFactory.Create(factoryMethod);
         }
 
-        private void AddElementWithId(string id, ElementWrapper element)
+        public ElementWrapper GetElementById(string id)
+        {
+            List<ElementWrapper> elements;
+
+            if (MarshalledElementsByIds.TryGetValue(id, out elements))
+            {
+                return elements.FirstOrDefault();
+            }
+
+            return null;
+        }
+
+        private void AddElementById(string id, ElementWrapper element)
         {
             List<ElementWrapper> elements;
             if (!MarshalledElementsByIds.TryGetValue(id, out elements))

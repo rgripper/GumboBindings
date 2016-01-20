@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="extra\extra.h" />
     <ClCompile Include="src\attribute.c" />
     <ClCompile Include="src\char_ref.c" />
     <ClCompile Include="src\error.c" />
@@ -42,14 +41,13 @@
     <ClInclude Include="src\vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Gumbo.DefGen\bin\Debug\Gumbo.def" />
-    <None Include="..\Gumbo.DefGen\bin\Release\Gumbo.def" />
     <None Include="Gumbo.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5F8C64A0-4AAB-4E5C-BF43-520EA9E3D659}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Gumbo</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,17 +74,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>gumbo</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Gumbo.Bindings\</OutDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <TargetName>gumbo</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GUMBO_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsC</CompileAs>

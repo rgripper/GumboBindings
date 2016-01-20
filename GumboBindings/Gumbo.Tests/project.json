@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0-*",
-  "description": "Gumbo.Tests Class Library",
-  "authors": [ "cgfqh" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.0.1-*",
+    "description": "Gumbo.Tests Class Library",
+    "authors": [ "Vladimir Zotov" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
     "frameworks": {
         "dnx452": { },
         "dnxcore50": { }
@@ -13,5 +13,8 @@
         "Gumbo": "1.0.0-*",
         "xunit": "2.1.0",
         "xunit.runner.dnx": "2.1.0-rc1-build204"
+    },
+    "commands": {
+        "test": "xunit.runner.dnx"
     }
 }

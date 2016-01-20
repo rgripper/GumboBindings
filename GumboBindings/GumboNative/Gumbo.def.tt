@@ -1,0 +1,4 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="$(libDir)\MyLib.dll" #>
+<#@ output extension=".txt" #>
+Hello <#= MyLib.MyClass.MyMethod() #>

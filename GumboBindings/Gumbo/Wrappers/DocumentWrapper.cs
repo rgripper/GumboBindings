@@ -26,7 +26,7 @@ namespace Gumbo.Wrappers
             : base(node, null)
         {
             _Children = factory.CreateDisposalAwareLazy(() => 
-                ImmutableArray.CreateRange(node.GetChildren().OrderBy(x => x.index_within_parent).Select(x => factory.CreateNodeWrapper(x))));
+                ImmutableArray.CreateRange(node.GetChildren().OrderBy(x => x.index_within_parent).Select(x => factory.CreateNodeWrapper(x, this))));
 
             HasDocType = node.document.has_doctype;
             Name = NativeUtf8Helper.StringFromNativeUtf8(node.document.name);
