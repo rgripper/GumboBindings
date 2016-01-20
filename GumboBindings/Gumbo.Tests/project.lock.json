@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     "DNX,Version=v4.5.2": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
@@ -353,7 +353,7 @@
       }
     },
     "DNXCore,Version=v5.0": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -1359,7 +1359,7 @@
       }
     },
     "DNX,Version=v4.5.2/win7-x86": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
@@ -1709,7 +1709,7 @@
       }
     },
     "DNX,Version=v4.5.2/win7-x64": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
@@ -2059,7 +2059,7 @@
       }
     },
     "DNXCore,Version=v5.0/win7-x86": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -3436,7 +3436,7 @@
       }
     },
     "DNXCore,Version=v5.0/win7-x64": {
-      "Gumbo/1.0.0": {
+      "Gumbo/1.1.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -4814,7 +4814,7 @@
     }
   },
   "libraries": {
-    "Gumbo/1.0.0": {
+    "Gumbo/1.1.0": {
       "type": "project",
       "path": "../Gumbo/project.json"
     },
@@ -7979,7 +7979,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Gumbo >= 1.0.0-*",
+      "Gumbo >= 1.1.0-*",
       "xunit >= 2.1.0",
       "xunit.runner.dnx >= 2.1.0-rc1-build204"
     ],

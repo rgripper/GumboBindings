@@ -11,8 +11,6 @@ namespace Gumbo.Wrappers
         private readonly Dictionary<string, List<ElementWrapper>> MarshalledElementsByIds =
             new Dictionary<string, List<ElementWrapper>>(StringComparer.OrdinalIgnoreCase);
 
-        private bool _IsMarshalled;
-
         public WrapperFactory(DisposalAwareLazyFactory lazyFactory)
         {
             _LazyFactory = lazyFactory;
