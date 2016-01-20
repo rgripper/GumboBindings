@@ -3,10 +3,9 @@ C# bindings for Gumbo - a pure-C HTML5 parser
 
 [Gumbo parser](https://github.com/google/gumbo-parser) bindings using P/Invokes and marshalling.
 
-You can get it via Nuget (https://www.nuget.org/packages/Gumbo.Wrappers/).
+You can get it via Nuget: `Install-Package Gumbo.Wrappers`
 
-Types member names are preserved the way they appear in the original code to make API change tracking easier.
-To simplify usage there are wrappers for the main classes.
+You will also need to place a native `gumbo.dll` along the wrapper library. You can either take one from this repo or compile yourself.
 
 ## Basic usage of the wrapper classes
 
@@ -28,7 +27,7 @@ It produces the following output:
 
 ## Utility projects
 
-### Gumbo (C++ Project)
+### GumboNative (C++ Project)
 
 This project compiles C sources into DLL using .DEF file containing exports used by P/Invokes.
 
