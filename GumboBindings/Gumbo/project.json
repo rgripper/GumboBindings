@@ -1,10 +1,10 @@
 {
-  "version": "1.1.0-*",
-  "description": "Gumbo.Wrappers Class Library",
-  "authors": [ "Vladimir Zotov" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.1.0-*",
+    "description": "Gumbo Bindings Class Library",
+    "authors": [ "Vladimir Zotov" ],
+    "tags": [ "gumbo", "bindings", "wrappers" ],
+    "projectUrl": "https://github.com/rgripper/GumboBindings/",
+    "licenseUrl": "",
     "frameworks": {
         "net452": {
             "frameworkAssemblies": {
