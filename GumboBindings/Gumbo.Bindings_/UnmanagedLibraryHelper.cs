@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Gumbo
 {
@@ -8,6 +9,7 @@ namespace Gumbo
     {
         public static IUnmanagedLibrary Create(string name)
         {
+#if CORECLR
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return new WindowsUnmanagedLibrary(name);
@@ -21,6 +23,9 @@ namespace Gumbo
                 // TODO
                 throw new NotImplementedException("Unmanaged library loading is not implemented on this platform");
             }
+#else
+            return new WindowsUnmanagedLibrary(name);
+#endif
         }
     }
 
