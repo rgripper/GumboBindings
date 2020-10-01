@@ -37,4 +37,4 @@ This project compiles C sources into DLL using .DEF file containing exports used
 
 Uses dumpbin.exe to generate exports from static library .LIB file and outputs .DEF file, consumed by C compiler.
 Static library is compiled by simply switching an option in project settings for Gumbo (C++ Project).
-Library name and path to VS bin folder containing dumpbin.exe are set in App.config.
+Library name and path to VS bin folder containing dumpbin.exe are set in "App.config".
